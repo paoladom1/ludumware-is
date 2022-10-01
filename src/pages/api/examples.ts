@@ -7,4 +7,6 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   res.status(200).json(examples);
 };
 
+//prueba
+
 export default examples;
