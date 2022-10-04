@@ -25,7 +25,8 @@ const Login: NextPage = () => {
                     <p className="text-gray-500 text-2xl font-normal my-7">
                         Inicia sesión
                     </p>
-                    <button className="w-80 bg-facebook text-white text-l py-2 px-5 mb-3">
+                    <button className="w-80 bg-facebook text-white text-l py-2 px-5 mb-3"
+                        onClick={() => signIn("facebook")}>
                         <FontAwesomeIcon className="text-xl mr-2" icon={faFacebook} />
                         Inicia sesión con Facebook
                     </button>
