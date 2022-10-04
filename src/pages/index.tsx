@@ -1,7 +1,9 @@
-import Login from "./components/login";
+import { NextPage } from "next";
+import Login from "./login";
 import AdmisionForm from "./components/admisionForm";
 
-const Home = () => {
+
+const Home: NextPage = () => {
   return (
     <div>
       <AdmisionForm />
