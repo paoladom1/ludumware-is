@@ -64,12 +64,12 @@ model User {
     id          String     @id @default(cuid())
     status      UserStatus @default(INACTIVE)
     role        UserRole   @default(CANDIDATE)
-    gender      Gender
+    gender      Gender     @default(OTHER)
     name        String
-    lastname    String
+    lastname    String?
     email       String     @unique
-    dateOfBirth DateTime
-    dui         String
+    dateOfBirth DateTime?
+    dui         String?
 
     image         String?
     emailVerified DateTime?
