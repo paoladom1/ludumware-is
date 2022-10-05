@@ -97,27 +97,25 @@ model VerificationToken {
 
 model Record {
     id                  String       @id @default(cuid())
-    name                String
-    lastname            String
+    firstName           String
+    lastName            String
     email               String
-    photoUrl            String
+    photoUrl            String?
     createdAt           DateTime     @default(now())
     updatedAt           DateTime     @updatedAt
     address             String
     personalPhoneNumber String
     facebookUrl         String
     levelOfStudy        LevelOfStudy @default(OTHER)
-    institutionUser     String
-    institutionPwd      String
     tuition             Float
-    enrollment          Float
-    semester            Int
+    enrollment          Float?
+    semester            Int?
     yearOfStudy         Int
     hasJob              String
-    institutionId       String
+    institutionId       String?
     careerId            String?
     jobId               String?
-    municipalityId      String
+    municipalityId      String?
 
     applications Application[]
     docs         Document[]
