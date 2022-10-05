@@ -5,7 +5,7 @@ import AdmisionForm from "./components/admisionForm";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="m-4">
       <AdmisionForm />
     </div>
   )
