@@ -71,7 +71,7 @@ function AdmisionForm() {
         <AcademicInfo />
         <button
           type="submit"
-          className={`w-50 bg-blue-400 text-white text-l py-2 px-5 m-8`}
+          className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
         >
           Enviar Solicitud
         </button>
