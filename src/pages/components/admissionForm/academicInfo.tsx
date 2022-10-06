@@ -91,6 +91,11 @@ function AcademicInfo() {
                       placeholder="Ciclo 01"
                       {...register("yearOfStudy")}
                     />
+                    {errors.yearOfStudy && (
+                      <i className="text-red-300">
+                        {errors.yearOfStudy?.message as string}
+                      </i>
+                    )}
                     <br />
                   </>
                   <label
@@ -104,8 +109,15 @@ function AcademicInfo() {
                     autoComplete="work-salary"
                     className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="$xxxx"
-                    {...register("tuition", { valueAsNumber: true })}
+                    {...register("tuition", {
+                      setValueAs: (v) => (v === "" ? -1 : parseInt(v)),
+                    })}
                   />
+                  {errors.tuition && (
+                    <i className="text-red-300">
+                      {errors.tuition?.message as string}
+                    </i>
+                  )}
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -118,7 +130,7 @@ function AcademicInfo() {
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("institution")}
                     >
-                      {["Santa Cecilia"].map((institution) => {
+                      {["UCA"].map((institution) => {
                         return (
                           <option key={institution} value={institution}>
                             {institution}
@@ -135,7 +147,7 @@ function AcademicInfo() {
                       className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("career")}
                     >
-                      {["Ing. Informatica", "Arquitecto"].map((career) => {
+                      {["Ing. Informatica", "Arquitectura"].map((career) => {
                         return (
                           <option key={career} value={career}>
                             {career}
@@ -157,6 +169,11 @@ function AcademicInfo() {
                     className="w-full border-bottom border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     {...register("institutionAddress")}
                   />
+                  {errors.institutionAddress && (
+                    <i className="text-red-300">
+                      {errors.institutionAddress?.message as string}
+                    </i>
+                  )}
                 </div>
                 <div className="col-span-3">
                   <label
@@ -171,6 +188,11 @@ function AcademicInfo() {
                     className="w-full border-bottom  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     {...register("institutionPhoneNumber")}
                   />
+                  {errors.institutionPhoneNumber && (
+                    <i className="text-red-300">
+                      {errors.institutionPhoneNumber?.message as string}
+                    </i>
+                  )}
                 </div>
               </div>
             </div>

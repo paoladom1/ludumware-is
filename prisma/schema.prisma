@@ -95,52 +95,40 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-model Record {
-    id                  String       @id @default(cuid())
-    firstName           String
-    lastName            String
-    email               String
-    photoUrl            String?
-    createdAt           DateTime     @default(now())
-    updatedAt           DateTime     @updatedAt
-    address             String
-    personalPhoneNumber String
-    facebookUrl         String
-    levelOfStudy        LevelOfStudy @default(OTHER)
-    tuition             Float
-    enrollment          Float?
-    semester            Int?
-    yearOfStudy         Int
-    hasJob              String
-    institutionId       String?
-    careerId            String?
-    jobId               String?
-    municipalityId      String?
+model Application {
+    id                     String       @id @default(cuid())
+    firstName              String
+    lastName               String
+    email                  String       @unique
+    photoUrl               String?
+    createdAt              DateTime     @default(now())
+    updatedAt              DateTime     @updatedAt
+    address                String
+    personalPhoneNumber    String
+    facebookUrl            String
+    levelOfStudy           LevelOfStudy @default(OTHER)
+    tuition                Float
+    enrollment             Float?
+    semester               Int?
+    yearOfStudy            Int
+    hasJob                 String
+    institutionName        String
+    institutionAddress     String
+    institutionPhoneNumber String
+    careerName             String
+    placeOfWork            String?
+    salary                 Float?
+    position               String?
+    workAddress            String?
+    workPhoneNumber        String?
 
-    applications Application[]
-    docs         Document[]
-    institution  Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-    career       Career?       @relation(fields: [careerId], references: [id])
-    job          Job?          @relation(fields: [jobId], references: [id])
-    municipality Municipality  @relation(fields: [municipalityId], references: [id])
-}
+    jobId          String?
+    municipalityId String?
+    userId         String
 
-model Institution {
-    id          String  @id @default(cuid())
-    name        String
-    address     String
-    phoneNumber String
-    description String?
-
-    records Record[]
-}
-
-model Career {
-    id          String  @id @default(cuid())
-    name        String
-    description String?
-
-    records Record[]
+    municipality Municipality? @relation(fields: [municipalityId], references: [id])
+    user         User          @relation(fields: [userId], references: [id])
+    record       Record?
 }
 
 model Document {
@@ -149,30 +137,16 @@ model Document {
     photoUrl    String
     docUrl      String
     recordId    String
-
-    record Record @relation(fields: [recordId], references: [id])
 }
 
-model Job {
-    id          String @id @default(cuid())
-    companyName String?
-    salary      Float?
-    position    String?
-    address     String?
-    phoneNumber String?
+model Record {
+    id            String  @id @default(cuid())
+    renewal       Boolean @default(false)
+    newAdmission  Boolean @default(true)
+    userId        String
+    applicationId String  @unique
 
-    records Record[]
-}
-
-model Application {
-    id           String  @id @default(cuid())
-    renewal      Boolean
-    newAdmission Boolean
-    userId       String
-    recordId     String
-
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    record Record @relation(fields: [recordId], references: [id], onDelete: Cascade)
+    application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model Municipality {
@@ -180,13 +154,13 @@ model Municipality {
     name         String
     departmentId String
 
-    department Department @relation(fields: [departmentId], references: [id])
-    Record     Record[]
+    department  Department    @relation(fields: [departmentId], references: [id])
+    Application Application[]
 }
 
 model Department {
     id   String @id @default(cuid())
-    name String
+    name String @unique
 
     municipalities Municipality[]
 }

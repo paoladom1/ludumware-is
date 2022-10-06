@@ -1,10 +1,29 @@
 import { useFormContext } from "react-hook-form";
+import { trpc } from "../../../utils/trpc";
+import { DEPARTMENTS, MUNICIPALITIES } from "./utils";
 
 function StudentInfo() {
   const {
+    watch,
     register,
     formState: { errors },
   } = useFormContext();
+
+  const selectedDepartment = watch("departments");
+  console.log(selectedDepartment);
+
+  const { data: departmentsData, isLoading } = trpc.useQuery([
+    "departments.getAll",
+  ]);
+  const { data: municipalitiesData, refetch: refetchMunicipalities } =
+    trpc.useQuery(
+      ["municipalitiesfindByDepartment", { id: selectedDepartment }],
+      { enabled: false }
+    );
+
+  if (isLoading) <h1>Cargando...</h1>;
+
+  console.log(municipalitiesData);
 
   return (
     <div className="m-5 sm:mt-0">
@@ -79,12 +98,13 @@ function StudentInfo() {
                     <input
                       type="date"
                       className="form-control w-full text-base font-normal text-gray-700 bg-white bg-clip-padding border-bottom border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      {...register("dateOfBirth", { valueAsDate: true })}
+                      {...register("dateOfBirth", {
+                        valueAsDate: true,
+                        required: true,
+                      })}
                     />
                     {errors.dateOfBirth && (
-                      <i className="text-red-300">
-                        {errors.dateOfBirth?.message as string}
-                      </i>
+                      <i className="text-red-300">Fecha inválida</i>
                     )}
                   </label>
                 </div>
@@ -93,16 +113,21 @@ function StudentInfo() {
                   <label className=" text-sm font-medium text-gray-700">
                     Departamento
                     <select
+                      defaultValue=""
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      {...register("departments")}
+                      {...register("departments", {
+                        onChange: () => {
+                          refetchMunicipalities();
+                        },
+                      })}
                     >
-                      <option disabled hidden selected value="">
+                      <option disabled hidden value="">
                         ----
                       </option>
-                      {DEPARTMENTS.map((department) => {
+                      {departmentsData?.map(({ id, name }) => {
                         return (
-                          <option key={department} value={department}>
-                            {department}
+                          <option key={id} value={id}>
+                            {name}
                           </option>
                         );
                       })}
@@ -118,11 +143,12 @@ function StudentInfo() {
                   <label className=" text-sm font-medium text-gray-700">
                     Munincipio
                     <select
+                      defaultValue=""
                       autoComplete="municipio-name"
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("municipality")}
                     >
-                      <option disabled hidden selected value="">
+                      <option disabled hidden value="">
                         ----
                       </option>
                       {MUNICIPALITIES.map((municipality) => {
@@ -214,6 +240,11 @@ function StudentInfo() {
                       placeholder="UCA"
                       {...register("placeOfWork")}
                     />
+                    {errors.placeOfWork && (
+                      <i className="text-red-300">
+                        {errors.placeOfWork?.message as string}
+                      </i>
+                    )}
                   </label>
                   <label className=" text-sm font-medium text-gray-700">
                     Sueldo actual:
@@ -222,7 +253,9 @@ function StudentInfo() {
                       autoComplete="work-salary"
                       className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       placeholder="$"
-                      {...register("salary", { valueAsNumber: true })}
+                      {...register("salary", {
+                        setValueAs: (v) => (v === "" ? 0 : parseInt(v)),
+                      })}
                     />
                     {errors.salary && (
                       <i className="text-red-300">
@@ -259,7 +292,7 @@ function StudentInfo() {
                       type="tel"
                       autoComplete="work-phone"
                       className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      {...register("workPhoneNumber", { valueAsNumber: true })}
+                      {...register("workPhoneNumber")}
                     />
                     {errors.workPhoneNumber && (
                       <i className="text-red-300">
