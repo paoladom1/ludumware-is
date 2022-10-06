@@ -1,12 +1,13 @@
 import { NextPage } from "next";
-import Login from "./login";
+import { useSession } from "next-auth/react";
+import AdmisionForm from "./components/admissionForm";
 
 const Home: NextPage = () => {
   return (
-    <div>
-      <Login />
+    <div className="m-4">
+      <AdmisionForm />
     </div>
-  )
+  );
 };
 
 export default Home;
