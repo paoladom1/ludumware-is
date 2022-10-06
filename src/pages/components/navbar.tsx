@@ -1,8 +1,8 @@
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
   return (
-    <nav className="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+    <nav className="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full top-0 left-0 border-b border-gray-200 dark:border-gray-600 mb-8">
       <div className="flex flex-wrap justify-between items-center mx-4">
         <a href="#" className="flex items-center">
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
@@ -33,9 +33,9 @@ const Navbar = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </button>

@@ -9,7 +9,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="w-full">
       {session && <Navbar />}
-      <div className="w-full mt-8">{children}</div>
+      <div className="w-full">{children}</div>
     </div>
   );
 };
