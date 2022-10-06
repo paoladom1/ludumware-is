@@ -128,7 +128,7 @@ function AcademicInfo() {
                     <select
                       autoComplete="departamento-name"
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      {...register("institution")}
+                      {...register("institutionName")}
                     >
                       {["UCA"].map((institution) => {
                         return (
@@ -145,7 +145,7 @@ function AcademicInfo() {
                     Carrera o técnico:
                     <select
                       className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      {...register("career")}
+                      {...register("careerName")}
                     >
                       {["Ing. Informatica", "Arquitectura"].map((career) => {
                         return (

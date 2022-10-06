@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
-import { DEPARTMENTS, MUNICIPALITIES } from "./utils";
 
 function StudentInfo() {
   const {
@@ -9,21 +9,15 @@ function StudentInfo() {
     formState: { errors },
   } = useFormContext();
 
-  const selectedDepartment = watch("departments");
-  console.log(selectedDepartment);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
 
-  const { data: departmentsData, isLoading } = trpc.useQuery([
-    "departments.getAll",
+  const { data: departmentsData } = trpc.useQuery(["departments.getAll"]);
+  const { data: municipalitiesData } = trpc.useQuery([
+    "municipalities.findByDepartment",
+    { id: selectedDepartment },
   ]);
-  const { data: municipalitiesData, refetch: refetchMunicipalities } =
-    trpc.useQuery(
-      ["municipalitiesfindByDepartment", { id: selectedDepartment }],
-      { enabled: false }
-    );
 
-  if (isLoading) <h1>Cargando...</h1>;
-
-  console.log(municipalitiesData);
+  const hasJob = watch("hasJob") === "yes";
 
   return (
     <div className="m-5 sm:mt-0">
@@ -115,9 +109,10 @@ function StudentInfo() {
                     <select
                       defaultValue=""
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      {...register("departments", {
-                        onChange: () => {
-                          refetchMunicipalities();
+                      {...register("department", {
+                        onChange: (e: React.FormEvent<HTMLSelectElement>) => {
+                          e.preventDefault();
+                          setSelectedDepartment(e.currentTarget.value);
                         },
                       })}
                     >
@@ -143,6 +138,7 @@ function StudentInfo() {
                   <label className=" text-sm font-medium text-gray-700">
                     Munincipio
                     <select
+                      disabled={municipalitiesData?.length === 0}
                       defaultValue=""
                       autoComplete="municipio-name"
                       className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -151,10 +147,10 @@ function StudentInfo() {
                       <option disabled hidden value="">
                         ----
                       </option>
-                      {MUNICIPALITIES.map((municipality) => {
+                      {municipalitiesData?.map(({ id, name }) => {
                         return (
-                          <option key={municipality} value={municipality}>
-                            {municipality}
+                          <option key={id} value={id}>
+                            {name}
                           </option>
                         );
                       })}
@@ -188,7 +184,7 @@ function StudentInfo() {
                     <input
                       type="text"
                       className="w-full flex-1 border-bottom border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      {...register("facebookURL")}
+                      {...register("facebookUrl")}
                     />
                     {errors.facebookURL && (
                       <i className="text-red-300">
@@ -228,79 +224,85 @@ function StudentInfo() {
                     </div>
                   </fieldset>
                 </div>
-                <div className="col-span-3">
-                  <label
-                    htmlFor="street-address"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    ¿Dónde trabaja?
-                    <input
-                      autoComplete="work-place"
-                      className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      placeholder="UCA"
-                      {...register("placeOfWork")}
-                    />
-                    {errors.placeOfWork && (
-                      <i className="text-red-300">
-                        {errors.placeOfWork?.message as string}
-                      </i>
-                    )}
-                  </label>
-                  <label className=" text-sm font-medium text-gray-700">
-                    Sueldo actual:
-                    <input
-                      type="number"
-                      autoComplete="work-salary"
-                      className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      placeholder="$"
-                      {...register("salary", {
-                        setValueAs: (v) => (v === "" ? 0 : parseInt(v)),
-                      })}
-                    />
-                    {errors.salary && (
-                      <i className="text-red-300">
-                        {errors.salary?.message as string}
-                      </i>
-                    )}
-                  </label>
-                </div>
-                <div className="col-span-3">
-                  <label
-                    htmlFor="street-address"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Dirección de trabajo
-                    <input
-                      autoComplete="work-street-address"
-                      className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      {...register("workAddress")}
-                    />
-                    {errors.workAddress && (
-                      <i className="text-red-300">
-                        {errors.workAddress?.message as string}
-                      </i>
-                    )}
-                  </label>
-                </div>
-                <div className="col-span-3">
-                  <label
-                    htmlFor="street-address"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Teléfono de trabajo
-                    <input
-                      type="tel"
-                      autoComplete="work-phone"
-                      className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      {...register("workPhoneNumber")}
-                    />
-                    {errors.workPhoneNumber && (
-                      <i className="text-red-300">
-                        {errors.workPhoneNumber?.message as string}
-                      </i>
-                    )}
-                  </label>
-                </div>
+                {hasJob && (
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      ¿Dónde trabaja?
+                      <input
+                        autoComplete="work-place"
+                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder="UCA"
+                        {...register("placeOfWork")}
+                      />
+                      {errors.placeOfWork && (
+                        <i className="text-red-300">
+                          {errors.placeOfWork?.message as string}
+                        </i>
+                      )}
+                    </label>
+                    <label className=" text-sm font-medium text-gray-700">
+                      Sueldo actual:
+                      <input
+                        type="number"
+                        autoComplete="work-salary"
+                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder="$"
+                        {...register("salary", {
+                          setValueAs: (v) => (v === "" ? 0 : parseInt(v)),
+                        })}
+                      />
+                      {errors.salary && (
+                        <i className="text-red-300">
+                          {errors.salary?.message as string}
+                        </i>
+                      )}
+                    </label>
+                  </div>
+                )}
+                {hasJob && (
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Dirección de trabajo
+                      <input
+                        autoComplete="work-street-address"
+                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        {...register("workAddress")}
+                      />
+                      {errors.workAddress && (
+                        <i className="text-red-300">
+                          {errors.workAddress?.message as string}
+                        </i>
+                      )}
+                    </label>
+                  </div>
+                )}
+                {hasJob && (
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Teléfono de trabajo
+                      <input
+                        type="tel"
+                        autoComplete="work-phone"
+                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        {...register("workPhoneNumber")}
+                      />
+                      {errors.workPhoneNumber && (
+                        <i className="text-red-300">
+                          {errors.workPhoneNumber?.message as string}
+                        </i>
+                      )}
+                    </label>
+                  </div>
+                )}
               </div>
             </div>
           </div>

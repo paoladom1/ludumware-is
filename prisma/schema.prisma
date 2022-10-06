@@ -84,7 +84,6 @@ model User {
 
     accounts     Account[]
     sessions     Session[]
-    applications Application[]
 }
 
 model VerificationToken {
@@ -104,14 +103,13 @@ model Application {
     createdAt              DateTime     @default(now())
     updatedAt              DateTime     @updatedAt
     address                String
-    personalPhoneNumber    String
-    facebookUrl            String
+    facebookUrl            String?
     levelOfStudy           LevelOfStudy @default(OTHER)
     tuition                Float
     enrollment             Float?
     semester               Int?
-    yearOfStudy            Int
-    hasJob                 String
+    yearOfStudy            String
+    hasJob                 Boolean
     institutionName        String
     institutionAddress     String
     institutionPhoneNumber String
@@ -122,13 +120,10 @@ model Application {
     workAddress            String?
     workPhoneNumber        String?
 
-    jobId          String?
-    municipalityId String?
-    userId         String
+    municipalityId String
+    userId         String?
 
-    municipality Municipality? @relation(fields: [municipalityId], references: [id])
-    user         User          @relation(fields: [userId], references: [id])
-    record       Record?
+    municipality Municipality @relation(fields: [municipalityId], references: [id])
 }
 
 model Document {
@@ -143,10 +138,9 @@ model Record {
     id            String  @id @default(cuid())
     renewal       Boolean @default(false)
     newAdmission  Boolean @default(true)
-    userId        String
-    applicationId String  @unique
 
-    application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    // applicationId String  @unique
+    // application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model Municipality {

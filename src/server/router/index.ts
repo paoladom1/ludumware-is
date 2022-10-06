@@ -11,7 +11,7 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .merge("auth.", protectedExampleRouter)
   .merge("departments.", departmentsRouter)
-  .merge("municipalities", municipalityRouter)
+  .merge("municipalities.", municipalityRouter)
   .merge("admissionForm.", admissionFormRouter);
 
 // export type definition of API
