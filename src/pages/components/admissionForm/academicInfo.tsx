@@ -1,3 +1,4 @@
+import { LevelOfStudy } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
 
 function AcademicInfo() {
@@ -33,6 +34,7 @@ function AcademicInfo() {
                         <label className="ml-3  text-sm font-medium text-gray-700">
                           <input
                             type="radio"
+                            value={LevelOfStudy.BACHILLERATO_TECNICO}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
@@ -43,6 +45,7 @@ function AcademicInfo() {
                         <label className="ml-3  text-sm font-medium text-gray-700">
                           <input
                             type="radio"
+                            value={LevelOfStudy.BACHILLERATO_GENERAL}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
@@ -53,6 +56,7 @@ function AcademicInfo() {
                         <label className="ml-3  text-sm font-medium text-gray-700">
                           <input
                             type="radio"
+                            value={LevelOfStudy.UNIVERSIDAD}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
@@ -63,6 +67,7 @@ function AcademicInfo() {
                         <label className="ml-3  text-sm font-medium text-gray-700">
                           <input
                             type="radio"
+                            value={LevelOfStudy.TECNICO}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />

@@ -4,6 +4,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { LevelOfStudy } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -28,7 +29,7 @@ export const formSchema = z.object({
     .string()
     .regex(/^[0-9]{4}[-]?[0-9]{4}$/)
     .optional(),
-  levelOfStudy: z.string().min(1, "Este campo es requerido"),
+  levelOfStudy: z.nativeEnum(LevelOfStudy),
   yearOfStudy: z.string().min(1, "Este campo es requerido"),
   tuition: z.number().nonnegative("Este campo es requerido"),
   careerName: z.string().min(1, "Este campo es requerido"),
@@ -42,8 +43,6 @@ export const formSchema = z.object({
 
 const defaultValues: FieldValues = {
   hasJob: "no",
-  municipality: null,
-  department: null,
 };
 
 type FormData = z.infer<typeof formSchema>;

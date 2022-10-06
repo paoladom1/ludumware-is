@@ -14,10 +14,11 @@ export const admissionFormRouter = createRouter().mutation("submit", {
       tuition: input.tuition,
       yearOfStudy: input.yearOfStudy,
       hasJob: input.hasJob === "yes",
+      levelOfStudy: input.levelOfStudy,
       institutionName: input.institutionName,
       institutionAddress: input.institutionAddress,
       institutionPhoneNumber: input.institutionPhoneNumber,
-      career: input.careerName,
+      careerName: input.careerName,
       municipality: { connect: { id: input.municipality } },
     };
 
