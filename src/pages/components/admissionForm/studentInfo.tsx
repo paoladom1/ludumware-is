@@ -1,8 +1,10 @@
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
 
 function StudentInfo() {
+  const { data: session } = useSession();
   const {
     watch,
     register,
@@ -73,7 +75,8 @@ function StudentInfo() {
                     Email address
                     <input
                       autoComplete="email"
-                      className="  w-full border-bottom border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      defaultValue={session?.user?.email || ""}
+                      className="w-full border-bottom border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       {...register("email")}
                     />
                     {errors.email && (
