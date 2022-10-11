@@ -20,6 +20,7 @@ function StudentInfo() {
   ]);
 
   const hasJob = watch("hasJob") === "yes";
+  const majority = watch("majority") == "yes";
 
   return (
     <div className="m-5 sm:mt-0">
@@ -105,7 +106,55 @@ function StudentInfo() {
                     )}
                   </label>
                 </div>
-
+                <>
+                <div className="col-span-6 sm:col-span-3">
+                  <fieldset>
+                    <legend className="contents text-base font-medium text-gray-900">
+                      Mayor de edad:
+                    </legend>
+                    <div className="mt-4 space-y-4">
+                      <div className="flex items-center">
+                        <label className="ml-3  text-sm font-medium text-gray-700 center">
+                          <input
+                            value="yes"
+                            type="radio"
+                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {...register("majority")}
+                          />
+                          <span className="ml-4">Si</span>
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <label className="ml-3  text-sm font-medium text-gray-700">
+                          <input
+                            value="no"
+                            type="radio"
+                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {...register("majority")}
+                          />
+                          <span className="ml-4">No</span>
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                {majority && (
+                  <>
+                      <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
+                        Número de DUI
+                      </label>
+                      <input
+                        type="text"
+                        name="work-place"
+                        id="work-place"
+                        autoComplete="work-place"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder="XXXXXXXX-X"
+                      />
+                      <br />
+                    </>
+                )}<br/>
+                </>
                 <div className="col-span-6 sm:col-span-3">
                   <label className=" text-sm font-medium text-gray-700">
                     Departamento
