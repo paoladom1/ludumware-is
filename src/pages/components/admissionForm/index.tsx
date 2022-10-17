@@ -12,6 +12,8 @@ import StudentInfo from "./studentInfo";
 import AcademicInfo from "./academicInfo";
 import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
+import LoadingModal from "../loadingModal";
+import { useRouter } from "next/router";
 
 export const formSchema = z.object({
   firstName: z.string().min(5, "Este campo es requerido"),
@@ -51,6 +53,7 @@ type FormData = z.infer<typeof formSchema>;
 
 function AdmisionForm() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const methods = useForm<FormData>({
     defaultValues,
@@ -58,10 +61,10 @@ function AdmisionForm() {
   });
   const { handleSubmit } = methods;
 
-  const submitFormMutation = trpc.useMutation(["admissionForm.submit"]);
+  const { mutate: submitFormMutation, isLoading } = trpc.useMutation(["admissionForm.submit"], { onSuccess: () => { router.push('/dashboard') } });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    submitFormMutation.mutate({ ...data, user: session?.user?.id });
+    submitFormMutation({ ...data, user: session?.user?.id });
   };
 
   return (
@@ -69,6 +72,7 @@ function AdmisionForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <StudentInfo />
         <AcademicInfo />
+        {isLoading && <LoadingModal />}
         <button
           type="submit"
           className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
