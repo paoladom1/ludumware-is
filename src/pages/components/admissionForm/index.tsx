@@ -60,12 +60,17 @@ export function AdmissionForm() {
   });
   const { handleSubmit } = methods;
 
-  const { mutate: submitFormMutation, isLoading: isSubmitting } =
-    trpc.useMutation(["admissionForm.submit"], {
-      onSuccess: () => {
+  const {
+    mutate: submitFormMutation,
+    isLoading: isSubmitting,
+    isSuccess,
+  } = trpc.useMutation(["admissionForm.submit"], {
+    onSuccess: () => {
+      setTimeout(() => {
         utils.invalidateQueries(["admissionForm.hasActiveApplication"]);
-      },
-    });
+      }, 2000);
+    },
+  });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     submitFormMutation({ ...data, user: session?.user?.id });
@@ -76,8 +81,9 @@ export function AdmissionForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <StudentInfo />
         <AcademicInfo />
-        <Modal />
-        {isSubmitting && <Modal />}
+        {(isSubmitting || isSuccess) && (
+          <Modal isLoading={isSubmitting} isSuccess={isSuccess} />
+        )}
         <button
           type="submit"
           className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
