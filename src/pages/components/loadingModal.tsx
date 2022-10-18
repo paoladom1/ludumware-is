@@ -9,7 +9,7 @@ interface LoadingFormProps {
 const Success: React.FC = () => {
   return (
     <div className="p-6 text-center sm:w-full">
-      <CheckIcon className="text-green-400 w-8 h-8" />
+      <CheckIcon className="text-green-400 w-8 h-8 mx-auto my-4" />
       <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
         Solicitud enviada con exito
       </h3>
