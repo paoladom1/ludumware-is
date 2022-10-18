@@ -3,7 +3,8 @@ import { NextAuthOptions } from "next-auth";
 import { unstable_getServerSession } from "next-auth/next";
 import { trpc } from "../utils/trpc";
 import { authOptions } from "./api/auth/[...nextauth]";
-import AdmisionForm from "./components/admissionForm";
+import { AdmissionForm } from "./components/admissionForm";
+import { Dashboard } from "./components/dashboard";
 
 const Home: NextPage<{ session: NextAuthOptions }> = () => {
   const { data: hasActiveApplication, isLoading } = trpc.useQuery([
@@ -15,10 +16,10 @@ const Home: NextPage<{ session: NextAuthOptions }> = () => {
   }
 
   if (hasActiveApplication) {
-    return <h2>Dashboard</h2>;
+    return <Dashboard />;
   }
 
-  return <AdmisionForm />;
+  return <AdmissionForm />;
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
