@@ -38,7 +38,7 @@ function AcademicInfo() {
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
-                          Bachillerato Técnico
+                          &nbsp;Bachillerato Técnico
                         </label>
                       </div>
                       <div className="flex items-center">
@@ -49,7 +49,7 @@ function AcademicInfo() {
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
-                          Bachillerato General
+                          &nbsp;Bachillerato General
                         </label>
                       </div>
                       <div className="flex items-center">
@@ -60,7 +60,7 @@ function AcademicInfo() {
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
-                          Universidad
+                          &nbsp;Universidad
                         </label>
                       </div>
                       <div className="flex items-center">
@@ -71,7 +71,7 @@ function AcademicInfo() {
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {...register("levelOfStudy")}
                           />
-                          Técnico
+                          &nbsp;Técnico
                         </label>
                       </div>
                     </div>
@@ -122,7 +122,23 @@ function AcademicInfo() {
                     <i className="text-red-300">
                       {errors.tuition?.message as string}
                     </i>
-                  )}
+                  )}{" "}
+                  <br />
+                  <br />
+                  <label
+                    htmlFor="academic-reference-name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Referencia Académica (Nombre Completo):
+                  </label>
+                  <input type="text" {...register("academicReferenceName")} />
+                  <label
+                    htmlFor="academic-reference-phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Número de teléfono de referencia académica:
+                  </label>
+                  <input type="text" {...register("academicReferenceNumber")} />
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label

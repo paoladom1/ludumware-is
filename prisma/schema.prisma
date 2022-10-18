@@ -44,7 +44,6 @@ model User {
   dateOfBirth   DateTime?
   image         String?
   emailVerified DateTime?
-  dui           String?
   accounts      Account[]
   applications  Application[]
   sessions      Session[]
@@ -59,34 +58,37 @@ model VerificationToken {
 }
 
 model Application {
-  id                     String       @id @default(cuid())
-  firstName              String
-  lastName               String
-  email                  String       @unique
-  photoUrl               String?
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-  address                String
-  facebookUrl            String?
-  levelOfStudy           LevelOfStudy @default(OTHER)
-  tuition                Float
-  enrollment             Float?
-  semester               Int?
-  yearOfStudy            String
-  hasJob                 Boolean
-  institutionName        String
-  institutionAddress     String
-  institutionPhoneNumber String
-  careerName             String
-  placeOfWork            String?
-  salary                 Float?
-  position               String?
-  workAddress            String?
-  workPhoneNumber        String?
-  municipalityId         String
-  userId                 String
-  municipality           Municipality @relation(fields: [municipalityId], references: [id])
-  user                   User         @relation(fields: [userId], references: [id])
+  id                      String       @id @default(cuid())
+  firstName               String
+  lastName                String
+  dui                     String?      @unique
+  email                   String       @unique
+  photoUrl                String?
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  address                 String
+  facebookUrl             String?
+  levelOfStudy            LevelOfStudy @default(OTHER)
+  tuition                 Float
+  enrollment              Float?
+  semester                Int?
+  yearOfStudy             String
+  hasJob                  Boolean
+  institutionName         String
+  institutionAddress      String
+  institutionPhoneNumber  String
+  careerName              String
+  placeOfWork             String?
+  salary                  Float?
+  position                String?
+  workAddress             String?
+  workPhoneNumber         String?
+  academicReferenceName   String?
+  academicReferenceNumber String?
+  municipalityId          String
+  userId                  String
+  municipality            Municipality @relation(fields: [municipalityId], references: [id])
+  user                    User         @relation(fields: [userId], references: [id])
 }
 
 model Document {
