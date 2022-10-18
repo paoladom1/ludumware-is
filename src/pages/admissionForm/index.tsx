@@ -4,13 +4,13 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { useSession } from "next-auth/react";
 import { LevelOfStudy } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import StudentInfo from "./studentInfo";
 import AcademicInfo from "./academicInfo";
+import { useSession } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
 import { LoadingOverlay } from "../loading";
 

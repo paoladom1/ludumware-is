@@ -2,10 +2,12 @@ import { UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { NextAuthOptions } from "next-auth";
 import { unstable_getServerSession } from "next-auth/next";
+import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { AdmissionForm } from "./components/admissionForm";
 import { Dashboard } from "./components/dashboard";
+import { Loading } from "./components/loading";
 
 const Home: NextPage<{ session: NextAuthOptions }> = () => {
   const { data: hasActiveApplication, isLoading } = trpc.useQuery([
@@ -13,7 +15,7 @@ const Home: NextPage<{ session: NextAuthOptions }> = () => {
   ]);
 
   if (isLoading) {
-    return <h2>Cargando...</h2>;
+    return <Loading />;
   }
 
   if (hasActiveApplication) {

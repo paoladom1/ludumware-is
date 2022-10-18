@@ -42,7 +42,9 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({
 };
 
 const Appications: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery(["admin.getAllApplications"]);
+  const { data: applications, error, isLoading } = trpc.useQuery(["admin.getAllApplications"]);
+
+  if (error) return <div>{error.message}</div>
 
   return (
     <div className="flex flex-col">
@@ -51,7 +53,7 @@ const Appications: NextPage = () => {
       </h2>
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
         {isLoading && <Loading />}
-        {data && (
+        {applications && (
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -112,7 +114,7 @@ const Appications: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map(({ id, firstName, lastName, levelOfStudy }) => (
+              {applications?.map(({ id, firstName, lastName, levelOfStudy }) => (
                 <ApplicationRow
                   key={id}
                   id={id}
@@ -144,10 +146,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   if (session.user?.role !== UserRole.ADMIN) {
     return {
       redirect: {
-        destination: "/",
-        permanent: true,
-      },
-    };
+        destination: "/unauthorized",
+        permanent: false,
+      }
+    }
   }
 
   return {
