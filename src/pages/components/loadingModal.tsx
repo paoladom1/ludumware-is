@@ -1,5 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
-import { Loading as LoadingSVG } from "./loading";
+import { LoadingSVG } from "./loading";
 
 interface LoadingFormProps {
   isLoading: boolean;

@@ -1,4 +1,4 @@
-export const Loading: React.FC = () => (
+export const LoadingSVG: React.FC = () => (
   <svg
     aria-hidden="true"
     className="animate-spin w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600 mx-auto"
@@ -15,4 +15,19 @@ export const Loading: React.FC = () => (
       fill="currentFill"
     />
   </svg>
+);
+
+interface LoadingProps {
+  message?: string;
+}
+
+export const Loading: React.FC<LoadingProps> = ({
+  message = "Cargando...",
+}) => (
+  <div className="p-6 text-center sm:w-full">
+    <LoadingSVG />
+    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+      {message}
+    </h3>
+  </div>
 );

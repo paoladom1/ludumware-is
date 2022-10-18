@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { NextAuthOptions } from "next-auth";
 import { unstable_getServerSession } from "next-auth/next";
@@ -30,6 +31,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       redirect: {
         destination: "/login",
         permanent: false,
+      },
+    };
+  }
+
+  if (session.user?.role === UserRole.ADMIN) {
+    return {
+      redirect: {
+        destination: "/applications",
+        permanent: true,
       },
     };
   }
