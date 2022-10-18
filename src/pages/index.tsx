@@ -2,7 +2,6 @@ import { UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { NextAuthOptions } from "next-auth";
 import { unstable_getServerSession } from "next-auth/next";
-import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { AdmissionForm } from "./components/admissionForm";

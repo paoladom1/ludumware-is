@@ -44,7 +44,6 @@ model User {
   dateOfBirth   DateTime?
   image         String?
   emailVerified DateTime?
-  dui           String?
   accounts      Account[]
   applications  Application[]
   sessions      Session[]
@@ -62,6 +61,7 @@ model Application {
   id                     String       @id @default(cuid())
   firstName              String
   lastName               String
+  dui                    String?      @unique
   email                  String       @unique
   photoUrl               String?
   createdAt              DateTime     @default(now())

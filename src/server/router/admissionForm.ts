@@ -22,6 +22,7 @@ export const admissionFormRouter = createRouter()
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
+        dui: input.dui,
         address: input.address,
         tuition: input.tuition,
         yearOfStudy: input.yearOfStudy,
