@@ -12,8 +12,7 @@ import StudentInfo from "./studentInfo";
 import AcademicInfo from "./academicInfo";
 import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
-import LoadingModal from "../loadingModal";
-import { useRouter } from "next/router";
+import { Modal } from "../loadingModal";
 
 export const formSchema = z.object({
   firstName: z.string().min(5, "Este campo es requerido"),
@@ -51,9 +50,9 @@ const defaultValues: FieldValues = {
 
 type FormData = z.infer<typeof formSchema>;
 
-function AdmisionForm() {
+export function AdmissionForm() {
+  const utils = trpc.useContext();
   const { data: session } = useSession();
-  const router = useRouter();
 
   const methods = useForm<FormData>({
     defaultValues,
@@ -61,7 +60,12 @@ function AdmisionForm() {
   });
   const { handleSubmit } = methods;
 
-  const { mutate: submitFormMutation, isLoading } = trpc.useMutation(["admissionForm.submit"], { onSuccess: () => { router.push('/dashboard') } });
+  const { mutate: submitFormMutation, isLoading: isSubmitting } =
+    trpc.useMutation(["admissionForm.submit"], {
+      onSuccess: () => {
+        utils.invalidateQueries(["admissionForm.hasActiveApplication"]);
+      },
+    });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     submitFormMutation({ ...data, user: session?.user?.id });
@@ -72,7 +76,8 @@ function AdmisionForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <StudentInfo />
         <AcademicInfo />
-        {isLoading && <LoadingModal />}
+        <Modal />
+        {isSubmitting && <Modal />}
         <button
           type="submit"
           className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
@@ -83,5 +88,3 @@ function AdmisionForm() {
     </FormProvider>
   );
 }
-
-export default AdmisionForm;

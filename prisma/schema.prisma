@@ -1,35 +1,26 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
-  // Further reading: 
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -39,52 +30,24 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-}
-
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-}
-
-enum UserRole {
-  ADMIN
-  SCHOLAR
-  CANDIDATE
-}
-
-enum LevelOfStudy {
-  BACHILLERATO_TECNICO
-  BACHILLERATO_GENERAL
-  UNIVERSIDAD
-  TECNICO
-  OTHER
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id          String     @id @default(cuid())
-  status      UserStatus @default(INACTIVE)
-  role        UserRole   @default(CANDIDATE)
-  gender      Gender     @default(OTHER)
-  name        String
-  lastname    String?
-  email       String     @unique
-  dateOfBirth DateTime?
-  dui         String?
-
+  id            String        @id @default(cuid())
+  status        UserStatus    @default(INACTIVE)
+  role          UserRole      @default(CANDIDATE)
+  gender        Gender        @default(OTHER)
+  name          String
+  lastname      String?
+  email         String        @unique
+  dateOfBirth   DateTime?
+  dui           String?
   image         String?
   emailVerified DateTime?
-
-  accounts     Account[]
-  sessions     Session[]
-  applications Application[]
+  accounts      Account[]
+  applications  Application[]
+  sessions      Session[]
 }
 
 model VerificationToken {
@@ -120,12 +83,10 @@ model Application {
   position               String?
   workAddress            String?
   workPhoneNumber        String?
-
-  municipalityId String
-  userId         String
-
-  municipality Municipality @relation(fields: [municipalityId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
+  municipalityId         String
+  userId                 String
+  municipality           Municipality @relation(fields: [municipalityId], references: [id])
+  user                   User         @relation(fields: [userId], references: [id])
 }
 
 model Document {
@@ -140,23 +101,43 @@ model Record {
   id           String  @id @default(cuid())
   renewal      Boolean @default(false)
   newAdmission Boolean @default(true)
-
-  // applicationId String  @unique
-  // application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model Municipality {
-  id           String @id @default(cuid())
+  id           String        @id @default(cuid())
   name         String
   departmentId String
-
-  department  Department    @relation(fields: [departmentId], references: [id])
-  Application Application[]
+  department   Department    @relation(fields: [departmentId], references: [id])
+  Application  Application[]
 }
 
 model Department {
-  id   String @id @default(cuid())
-  name String @unique
-
+  id             String         @id @default(cuid())
+  name           String         @unique
   municipalities Municipality[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserRole {
+  ADMIN
+  SCHOLAR
+  CANDIDATE
+}
+
+enum LevelOfStudy {
+  BACHILLERATO_TECNICO
+  BACHILLERATO_GENERAL
+  UNIVERSIDAD
+  TECNICO
+  OTHER
 }
