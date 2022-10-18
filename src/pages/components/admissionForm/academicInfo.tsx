@@ -122,29 +122,23 @@ function AcademicInfo() {
                     <i className="text-red-300">
                       {errors.tuition?.message as string}
                     </i>
-                  )} <br /><br />
-                  <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
+                  )}{" "}
+                  <br />
+                  <br />
+                  <label
+                    htmlFor="academic-reference-name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Referencia Académica (Nombre Completo):
                   </label>
-                  <input
-                    type="text"
-                    name="work-salary"
-                    id="work-salary"
-                    autoComplete="work-salary"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="Nombre Completo"
-                  /><br />
-                  <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
+                  <input type="text" {...register("academicReferenceName")} />
+                  <label
+                    htmlFor="academic-reference-phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Número de teléfono de referencia académica:
                   </label>
-                  <input
-                    type="text"
-                    name="work-salary"
-                    id="work-salary"
-                    autoComplete="work-salary"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="XXXX-XXXX"
-                  /><br />
+                  <input type="text" {...register("academicReferenceNumber")} />
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label

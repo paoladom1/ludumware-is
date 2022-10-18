@@ -41,7 +41,9 @@ export const formSchema = z.object({
     .string()
     .regex(/^[0-9]{4}[-]?[0-9]{4}$/)
     .optional(),
-  levelOfStudy: z.nativeEnum(LevelOfStudy),
+  levelOfStudy: z.nativeEnum(LevelOfStudy, {
+    invalid_type_error: "Este campo es requerido",
+  }),
   yearOfStudy: z.string().min(1, "Este campo es requerido"),
   tuition: z.number().nonnegative("Este campo es requerido"),
   careerName: z.string().min(1, "Este campo es requerido"),
@@ -51,6 +53,8 @@ export const formSchema = z.object({
     .string()
     .regex(/^[0-9]{4}[-]?[0-9]{4}$/, "Ingresar un número de teléfono válido")
     .min(1),
+  academicReferenceName: z.string().optional(),
+  academicReferenceNumber: z.string().optional(),
   user: z.string().optional(),
 });
 

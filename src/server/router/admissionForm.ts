@@ -32,6 +32,8 @@ export const admissionFormRouter = createRouter()
         institutionAddress: input.institutionAddress,
         institutionPhoneNumber: input.institutionPhoneNumber,
         careerName: input.careerName,
+        academicReferenceName: input.academicReferenceName,
+        academicReferenceNumber: input.academicReferenceNumber,
         municipality: { connect: { id: input.municipality } },
         user: { connect: { id: input.user } },
       };
