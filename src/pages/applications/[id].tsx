@@ -281,7 +281,7 @@ const ApplicationDetails: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-around m-8 p-6">
+      <div className="flex justify-end mt-8">
         <button
           type="submit"
           className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8"
@@ -290,7 +290,7 @@ const ApplicationDetails: NextPage = () => {
         </button>
         <button
           type="submit"
-          className="w-96 rounded bg-gray-400 text-white text-l py-2 px-5 m-8"
+          className="w-96 rounded bg-red-400 text-white text-l py-2 px-5 m-8"
         >
           Denegar Solicitud
         </button>
