@@ -1,9 +1,10 @@
 import { UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
-import { trpc } from "../utils/trpc";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { Loading } from "./components/loading";
+import Link from "next/link";
+import { trpc } from "../../utils/trpc";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { Loading } from "../components/loading";
 
 interface ApplicationRowProps {
   id: string;
@@ -33,12 +34,11 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({
       <td className="py-4 px-6">{levelOfStudy}</td>
       <td className="py-4 px-6">{createdAt.toLocaleDateString("es-ES")}</td>
       <td className="py-4 px-6 text-right">
-        <a
-          href="#"
-          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-        >
-          Ver
-        </a>
+        <Link href={`/applications/${id}`}>
+          <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+            Ver
+          </a>
+        </Link>
       </td>
     </tr>
   );

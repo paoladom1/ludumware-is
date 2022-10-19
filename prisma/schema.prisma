@@ -41,7 +41,6 @@ model User {
   name          String
   lastname      String?
   email         String        @unique
-  dateOfBirth   DateTime?
   image         String?
   emailVerified DateTime?
   accounts      Account[]
@@ -61,7 +60,6 @@ model Application {
   id                      String       @id @default(cuid())
   firstName               String
   lastName                String
-  dui                     String?      @unique
   email                   String       @unique
   photoUrl                String?
   createdAt               DateTime     @default(now())
@@ -83,10 +81,12 @@ model Application {
   position                String?
   workAddress             String?
   workPhoneNumber         String?
-  academicReferenceName   String?
-  academicReferenceNumber String?
   municipalityId          String
   userId                  String
+  dui                     String?      @unique
+  academicReferenceName   String?
+  academicReferenceNumber String?
+  dateOfBirth             DateTime?
   municipality            Municipality @relation(fields: [municipalityId], references: [id])
   user                    User         @relation(fields: [userId], references: [id])
 }
