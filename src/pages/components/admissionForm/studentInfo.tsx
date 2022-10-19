@@ -140,7 +140,7 @@ function StudentInfo() {
                     Departamento
                     <select
                       defaultValue=""
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("department", {
                         onChange: (e: React.FormEvent<HTMLSelectElement>) => {
                           e.preventDefault();
@@ -173,7 +173,7 @@ function StudentInfo() {
                       disabled={municipalitiesData?.length === 0}
                       defaultValue=""
                       autoComplete="municipio-name"
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("municipality")}
                     >
                       <option disabled hidden value="">

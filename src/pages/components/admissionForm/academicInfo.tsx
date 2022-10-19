@@ -148,7 +148,7 @@ function AcademicInfo() {
                     Institución:
                     <select
                       autoComplete="departamento-name"
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("institutionName")}
                     >
                       {["UCA"].map((institution) => {
