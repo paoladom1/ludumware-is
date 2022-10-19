@@ -98,12 +98,14 @@ export function AdmissionForm() {
         {(isSubmitting || isSuccess) && (
           <LoadingOverlay isLoading={isSubmitting} isSuccess={isSuccess} />
         )}
-        <button
-          type="submit"
-          className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
-        >
-          Enviar Solicitud
-        </button>
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className={`w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8`}
+          >
+            Enviar Solicitud
+          </button>
+        </div>
       </form>
     </FormProvider>
   );

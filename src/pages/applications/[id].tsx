@@ -34,6 +34,15 @@ const ApplicationDetails: NextPage = () => {
     workAddress,
     workPhoneNumber,
     municipality,
+    levelOfStudy,
+    yearOfStudy,
+    tuition,
+    academicReferenceName,
+    academicReferenceNumber,
+    institutionName,
+    institutionAddress,
+    institutionPhoneNumber,
+    careerName,
   } = data as Application;
 
   const majorityDate = subYears(new Date(), 18);
@@ -42,187 +51,249 @@ const ApplicationDetails: NextPage = () => {
     : false;
 
   return (
-    <div className="m-5 sm:mt-0">
-      <div className="md:grid md:grid-cols-3 md:gap-6">
-        <div className="md:col-span-1">
-          <div className="px-4 sm:px-0">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Datos del solicitante
-            </h3>
+    <div>
+      <div className="m-5 sm:mt-0">
+        <h2 className="flex justify-center uppercase text-xl font-bold my-8">
+          Datos de la solicitud
+        </h2>
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-gray-900 flex justify-end mr-6">
+                Datos del solicitante
+              </h3>
+            </div>
           </div>
-        </div>
-        <div className="mt-5 md:col-span-2 md:mt-0">
-          <div className="overflow-hidden shadow sm:rounded-md">
-            <div className="bg-white px-4 py-5 sm:p-9">
-              <div className="grid grid-cols-6 gap-6">
-                <div className="col-span-6 sm:col-span-3">
-                  <label className=" text-sm font-medium text-gray-700">
-                    Nombres
-                    <TextInput disabled value={firstName} />
-                  </label>
-                </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <div className="overflow-hidden shadow sm:rounded-md">
+              <div className="bg-white px-4 py-5 sm:p-9">
+                <div className="grid grid-cols-6 gap-6">
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Nombres
+                      <TextInput disabled value={firstName} />
+                    </label>
+                  </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                  <label className=" text-sm font-medium text-gray-700">
-                    Apellidos
-                    <TextInput disabled value={lastName} />
-                  </label>
-                </div>
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Apellidos
+                      <TextInput disabled value={lastName} />
+                    </label>
+                  </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                  <label className=" text-sm font-medium text-gray-700">
-                    Email address
-                    <input
-                      disabled
-                      value={email}
-                      className="w-full border-bottom border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                  <label
-                    htmlFor="birthday"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Fecha de nacimiento
-                    <input
-                      disabled
-                      value={dateOfBirth?.toLocaleDateString("es-ES")}
-                      className="form-control w-full text-base font-normal text-gray-700 bg-white bg-clip-padding border-bottom border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    />
-                  </label>
-                </div>
-                {majority && (
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Email address
+                      <TextInput disabled value={email} />
+                    </label>
+                  </div>
+                  <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                    <label
+                      htmlFor="birthday"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Fecha de nacimiento
+                      <TextInput
+                        disabled
+                        value={dateOfBirth?.toLocaleDateString("es-ES")}
+                      />
+                    </label>
+                  </div>
+                  {majority && (
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="street-address"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Número de DUI
+                      </label>
+                      <TextInput disabled value={dui || ""} />
+                    </div>
+                  )}
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Departamento
+                      <TextInput
+                        disabled
+                        value={municipality.department.name}
+                      />
+                    </label>
+                  </div>
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Munincipio
+                      <TextInput disabled value={municipality.name} />
+                    </label>
+                  </div>
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Dirección de vivienda
+                      <TextInput disabled value={address} />
+                    </label>
+                  </div>
                   <div className="col-span-6 sm:col-span-3">
                     <label
-                      htmlFor="street-address"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Número de DUI
-                    </label>
-                    <input
-                      disabled
-                      value={dui || ""}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                )}
-                <div className="col-span-6 sm:col-span-3">
-                  <label className=" text-sm font-medium text-gray-700">
-                    Departamento
-                    <input
-                      disabled
-                      value={municipality.department.name}
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label className=" text-sm font-medium text-gray-700">
-                    Munincipio
-                    <input
-                      disabled
-                      value={municipality.name}
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="col-span-3">
-                  <label
-                    htmlFor="street-address"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Dirección de vivienda
-                    <input
-                      disabled
-                      value={address}
-                      className="w-full border-bottom border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="company-website"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Facebook URL
-                    <input
-                      disabled
-                      value={facebookUrl || ""}
-                      className="w-full flex-1 border-bottom border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="company-website"
-                    className=" text-sm font-medium text-gray-700"
-                  >
-                    Actualmente Trabaja
-                    <input
-                      disabled
-                      className="w-full flex-1 border-bottom border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      value={hasJob ? "Si" : "No"}
-                    />
-                  </label>
-                </div>
-                {hasJob && (
-                  <div className="col-span-3">
-                    <label
-                      htmlFor="street-address"
+                      htmlFor="company-website"
                       className=" text-sm font-medium text-gray-700"
                     >
-                      ¿Dónde trabaja?
-                      <input
-                        disabled
-                        value={placeOfWork || ""}
-                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </label>
-                    <label className=" text-sm font-medium text-gray-700">
-                      Sueldo actual:
-                      <input
-                        value={"$" + salary}
-                        disabled
-                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                      Facebook URL
+                      <TextInput disabled value={facebookUrl || ""} />
                     </label>
                   </div>
-                )}
-                {hasJob && (
-                  <div className="col-span-3">
+                  <div className="col-span-6 sm:col-span-3">
                     <label
-                      htmlFor="street-address"
+                      htmlFor="company-website"
                       className=" text-sm font-medium text-gray-700"
                     >
-                      Dirección de trabajo
-                      <input
-                        disabled
-                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        value={workAddress || ""}
-                      />
+                      Actualmente Trabaja
+                      <TextInput disabled value={hasJob ? "Si" : "No"} />
                     </label>
                   </div>
-                )}
-                {hasJob && (
-                  <div className="col-span-3">
-                    <label
-                      htmlFor="street-address"
-                      className=" text-sm font-medium text-gray-700"
-                    >
-                      Teléfono de trabajo
-                      <input
-                        disabled
-                        className="w-full  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        value={workPhoneNumber || ""}
-                      />
-                    </label>
-                  </div>
-                )}
+                  {hasJob && (
+                    <div className="col-span-3">
+                      <label
+                        htmlFor="street-address"
+                        className=" text-sm font-medium text-gray-700"
+                      >
+                        ¿Dónde trabaja?
+                        <TextInput disabled value={placeOfWork || ""} />
+                      </label>
+                      <label className=" text-sm font-medium text-gray-700">
+                        Sueldo actual:
+                        <TextInput value={"$" + salary} disabled />
+                      </label>
+                    </div>
+                  )}
+                  {hasJob && (
+                    <div className="col-span-3">
+                      <label
+                        htmlFor="street-address"
+                        className=" text-sm font-medium text-gray-700"
+                      >
+                        Dirección de trabajo
+                        <TextInput disabled value={workAddress || ""} />
+                      </label>
+                    </div>
+                  )}
+                  {hasJob && (
+                    <div className="col-span-3">
+                      <label
+                        htmlFor="street-address"
+                        className=" text-sm font-medium text-gray-700"
+                      >
+                        Teléfono de trabajo
+                        <TextInput disabled value={workPhoneNumber || ""} />
+                      </label>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="m-5 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-gray-900 flex justify-end mr-6">
+                Datos académicos
+              </h3>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0 flex flex-col">
+            <div className="overflow-hidden shadow sm:">
+              <div className="bg-white px-4 py-5 sm:p-9">
+                <div className="grid grid-cols-6 gap-6">
+                  <div className="col-span-3">
+                    <label className="contents text-base font-medium text-gray-900">
+                      Tipo de estudio
+                    </label>
+                    <TextInput value={levelOfStudy} disabled />
+                  </div>
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Año o ciclo universitario a cursar:
+                    </label>
+                    <TextInput value={yearOfStudy} disabled />
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Cuota mensual a pagar:
+                    </label>
+                    <TextInput disabled value={tuition} />
+                    <label
+                      htmlFor="academic-reference-name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Referencia Académica (Nombre Completo):
+                    </label>
+                    <TextInput disabled value={academicReferenceName || ""} />
+                    <label
+                      htmlFor="academic-reference-phone"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Número de teléfono de referencia académica:
+                    </label>
+                    <TextInput disabled value={academicReferenceNumber || ""} />
+                  </div>
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Institución:
+                      <TextInput disabled value={institutionName} />
+                    </label>
+                  </div>
+                  <div className="col-span-6 sm:col-span-3">
+                    <label className=" text-sm font-medium text-gray-700">
+                      Carrera o técnico:
+                      <TextInput disabled value={careerName} />
+                    </label>
+                  </div>
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className=" text-sm font-medium text-gray-700"
+                    >
+                      Dirección de la institución
+                    </label>
+                    <TextInput disabled value={institutionAddress} />
+                  </div>
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="phone-number"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Teléfono de institución:
+                    </label>
+                    <TextInput disabled value={institutionPhoneNumber} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-around m-8 p-6">
+        <button
+          type="submit"
+          className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8"
+        >
+          Aceptar Solicitud
+        </button>
+        <button
+          type="submit"
+          className="w-96 rounded bg-gray-400 text-white text-l py-2 px-5 m-8"
+        >
+          Denegar Solicitud
+        </button>
       </div>
     </div>
   );
