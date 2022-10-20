@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
 
+import { subYears, isAfter, isDate } from "date-fns";
+
 function StudentInfo() {
   const { data: session } = useSession();
   const {
@@ -20,6 +22,11 @@ function StudentInfo() {
   ]);
 
   const hasJob = watch("hasJob") === "yes";
+  const dateOfBirth = watch("dateOfBirth");
+  const majorityDate = subYears(new Date(), 18);
+  const majority = isDate(dateOfBirth)
+    ? isAfter(majorityDate, dateOfBirth)
+    : false;
 
   return (
     <div className="m-5 sm:mt-0">
@@ -101,17 +108,39 @@ function StudentInfo() {
                       })}
                     />
                     {errors.dateOfBirth && (
-                      <i className="text-red-300">Fecha inválida</i>
+                      <i className="text-red-300">
+                        {errors?.dateOfBirth?.message as string}
+                      </i>
                     )}
                   </label>
                 </div>
-
+                {majority && (
+                  <div className="col-span-6 sm:col-span-3">
+                    <label
+                      htmlFor="street-address"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Número de DUI
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      {...register("dui")}
+                    />
+                    {errors.dui && (
+                      <i className="text-red-300">
+                        {errors.dui.message as string}
+                      </i>
+                    )}
+                  </div>
+                )}
                 <div className="col-span-6 sm:col-span-3">
                   <label className=" text-sm font-medium text-gray-700">
                     Departamento
                     <select
                       defaultValue=""
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("department", {
                         onChange: (e: React.FormEvent<HTMLSelectElement>) => {
                           e.preventDefault();
@@ -144,7 +173,7 @@ function StudentInfo() {
                       disabled={municipalitiesData?.length === 0}
                       defaultValue=""
                       autoComplete="municipio-name"
-                      className="w-full  border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("municipality")}
                     >
                       <option disabled hidden value="">
