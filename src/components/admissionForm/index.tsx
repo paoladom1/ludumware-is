@@ -10,10 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { subYears } from "date-fns";
 
+import { trpc } from "@/utils/trpc";
+import { LoadingOverlay } from "@/components/loading";
 import StudentInfo from "./studentInfo";
 import AcademicInfo from "./academicInfo";
-import { trpc } from "../../../utils/trpc";
-import { LoadingOverlay } from "../loading";
 
 export const formSchema = z.object({
   firstName: z.string().min(5, "Este campo es requerido"),

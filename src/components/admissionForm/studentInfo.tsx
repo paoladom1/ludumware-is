@@ -1,9 +1,9 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { trpc } from "../../../utils/trpc";
-
 import { subYears, isAfter, isDate } from "date-fns";
+
+import { trpc } from "@/utils/trpc";
 
 function StudentInfo() {
   const { data: session } = useSession();

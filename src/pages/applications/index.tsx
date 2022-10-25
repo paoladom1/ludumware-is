@@ -2,9 +2,10 @@ import { UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import Link from "next/link";
-import { trpc } from "../../utils/trpc";
+
+import { trpc } from "@/utils/trpc";
+import { Loading } from "@/components/loading";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { Loading } from "../components/loading";
 
 interface ApplicationRowProps {
   id: string;

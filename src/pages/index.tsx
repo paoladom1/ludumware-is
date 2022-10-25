@@ -4,9 +4,9 @@ import { NextAuthOptions } from "next-auth";
 import { unstable_getServerSession } from "next-auth/next";
 import { trpc } from "../utils/trpc";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { AdmissionForm } from "./components/admissionForm";
-import { Dashboard } from "./components/dashboard";
-import { Loading } from "./components/loading";
+import { AdmissionForm } from "@/components/admissionForm";
+import { Dashboard } from "@/components/dashboard";
+import { Loading } from "@/components/loading";
 
 const Home: NextPage<{ session: NextAuthOptions }> = () => {
   const { data: hasActiveApplication, isLoading } = trpc.useQuery([

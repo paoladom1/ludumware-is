@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
 import { PropsWithChildren } from "react";
 
-import Navbar from "./navbar";
+import Navbar from "@/components/navbar";
+// import { MenuLateral } from "@/components/sidemenu";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const { data: session } = useSession();

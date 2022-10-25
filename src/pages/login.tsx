@@ -10,12 +10,6 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const Login: NextPage = () => {
-  const login =
-    (provider: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      signIn(provider, { callbackUrl: "/" });
-    };
-
   return (
     <div className="w-full flex justify-center items-center">
       <section className="h-screen">

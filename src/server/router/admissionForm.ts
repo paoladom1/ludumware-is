@@ -1,7 +1,7 @@
 import { createProtectedRouter } from "./context";
 import { Prisma } from "@prisma/client";
 
-import { formSchema } from "../../pages/components/admissionForm";
+import { formSchema } from "@/components/admissionForm";
 import { z } from "zod";
 
 export const admissionFormRouter = createProtectedRouter()

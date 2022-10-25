@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { Application } from "@prisma/client";
 import { subYears, isAfter, isDate } from "date-fns";
 
-import { trpc } from "../../utils/trpc";
-import { Loading } from "../components/loading";
-import { TextInput } from "../components/textInput";
-import { Application } from "@prisma/client";
+import { trpc } from "@/utils/trpc";
+import { Loading } from "@/components/loading";
+import { TextInput } from "@/components/textInput";
 
 const ApplicationDetails: NextPage = () => {
   const {
