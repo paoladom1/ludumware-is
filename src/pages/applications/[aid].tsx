@@ -1,11 +1,15 @@
-import { NextPage } from "next";
+import { NextPage, GetServerSideProps } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { unstable_getServerSession } from "next-auth/next";
+import { UserRole } from "@prisma/client";
 import { subYears, isAfter, isDate } from "date-fns";
 
 import { trpc } from "@/utils/trpc";
+import { authOptions } from "../api/auth/[...nextauth]";
+
 import { Loading } from "@/components/loading";
 import { TextInput } from "@/components/textInput";
-import Head from "next/head";
 
 const ApplicationDetails: NextPage = () => {
   const {
@@ -294,6 +298,32 @@ const ApplicationDetails: NextPage = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  if (session.user?.role !== UserRole.ADMIN) {
+    return {
+      redirect: {
+        destination: "/unauthorized",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 };
 
 export default ApplicationDetails;
