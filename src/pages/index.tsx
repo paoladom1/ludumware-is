@@ -50,14 +50,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 export default Home;
 
-const ScholarsByGender = () => (
+const ScholarsByGender: React.FC = () => (
   <div className="h-auto bg-white rounded p-9 shadow-lg">
     <h1 className="text-lg text-center font-bold pb-3">Becarios por género.</h1>
     <DonutGraph />
   </div>
 );
 
-const ApplicationsReceived = () => (
+const ApplicationsReceived: React.FC = () => (
   <div className="h-auto bg-white rounded p-9 shadow-lg">
     <h1 className="text-lg text-center font-bold pb-3">
       Solicitudes recibidas.
@@ -70,7 +70,7 @@ const ApplicationsReceived = () => (
   </div>
 );
 
-const ScholarsByInstitution = () => (
+const ScholarsByInstitution: React.FC = () => (
   <div className="col-span-2 row-span-2 h-full bg-white rounded p-9 shadow-lg">
     <h1 className="text-lg text-center font-bold">
       Becarios por institución de estudio.

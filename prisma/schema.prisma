@@ -87,6 +87,7 @@ model Application {
   academicReferenceName   String?
   academicReferenceNumber String?
   dateOfBirth             DateTime?
+  gender                  Gender?
   municipality            Municipality @relation(fields: [municipalityId], references: [id])
   user                    User         @relation(fields: [userId], references: [id])
 }

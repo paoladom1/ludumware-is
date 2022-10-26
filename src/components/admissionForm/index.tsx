@@ -5,7 +5,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { LevelOfStudy } from "@prisma/client";
+import { Gender, LevelOfStudy } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { subYears } from "date-fns";
@@ -14,10 +14,14 @@ import { trpc } from "@/utils/trpc";
 import { LoadingOverlay } from "@/components/loading";
 import StudentInfo from "./studentInfo";
 import AcademicInfo from "./academicInfo";
+import { useRouter } from "next/router";
 
 export const formSchema = z.object({
   firstName: z.string().min(5, "Este campo es requerido"),
   lastName: z.string().min(5, "Este campo es requerido"),
+  gender: z.nativeEnum(Gender, {
+    invalid_type_error: "Este campo es requerido",
+  }),
   email: z.string().email("Este campo es requerido"),
   dui: z
     .string()
@@ -64,8 +68,8 @@ const defaultValues: FieldValues = {
 
 type FormData = z.infer<typeof formSchema>;
 
-export function AdmissionForm() {
-  const utils = trpc.useContext();
+export const AdmissionForm: React.FC = () => {
+  const router = useRouter();
   const { data: session } = useSession();
 
   const methods = useForm<FormData>({
@@ -81,7 +85,7 @@ export function AdmissionForm() {
   } = trpc.useMutation(["admissionForm.submit"], {
     onSuccess: () => {
       setTimeout(() => {
-        utils.invalidateQueries(["admissionForm.hasActiveApplication"]);
+        router.push("/");
       }, 2000);
     },
   });
@@ -109,4 +113,4 @@ export function AdmissionForm() {
       </form>
     </FormProvider>
   );
-}
+};

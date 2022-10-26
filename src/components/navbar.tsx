@@ -7,6 +7,7 @@ import { UserRole } from "@prisma/client";
 type Route = { path: string; label: string };
 const commonRoutes: Route[] = [
   { path: "/", label: "Inicio" },
+  { path: "/applicationSubmission", label: "Nueva Solicitud" },
   { path: "/about", label: "Acerca de" },
   { path: "/contact-us", label: "Contactanos" },
 ];

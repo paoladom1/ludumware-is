@@ -37,6 +37,7 @@ export const admissionFormRouter = createProtectedRouter()
       const application: Prisma.ApplicationCreateInput = {
         firstName: input.firstName,
         lastName: input.lastName,
+        gender: input.gender,
         dateOfBirth: input.dateOfBirth,
         email: input.email,
         dui: input.dui,
