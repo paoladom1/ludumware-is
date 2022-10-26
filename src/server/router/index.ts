@@ -6,10 +6,12 @@ import { admissionFormRouter } from "./admissionForm";
 import { departmentsRouter } from "./departments";
 import { municipalityRouter } from "./municipalities";
 import { adminRouter } from "./admin";
+import { dashboardRouter } from "./dashboard";
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge("admin.", adminRouter)
+  .merge("dashboard.", dashboardRouter)
   .merge("departments.", departmentsRouter)
   .merge("municipalities.", municipalityRouter)
   .merge("admissionForm.", admissionFormRouter);

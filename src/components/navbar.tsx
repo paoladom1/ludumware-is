@@ -5,14 +5,13 @@ import { useMemo, useState } from "react";
 import { UserRole } from "@prisma/client";
 
 type Route = { path: string; label: string };
+
 const commonRoutes: Route[] = [
   { path: "/", label: "Inicio" },
   { path: "/applicationSubmission", label: "Nueva Solicitud" },
-  { path: "/about", label: "Acerca de" },
-  { path: "/contact-us", label: "Contactanos" },
 ];
 
-const adminRoutes: Route[] = [{ path: "/applications", label: "Aplicaciones" }];
+const adminRoutes: Route[] = [{ path: "/applications", label: "Solicitudes" }];
 
 const Navbar = () => {
   const { data: session } = useSession({ required: true });

@@ -7,6 +7,9 @@ import GraficaBarraH from "@/components/barGraphH";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
+import { UserRole } from "@prisma/client";
+import { Loading } from "@/components/loading";
 
 const Home: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -50,12 +53,24 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 export default Home;
 
-const ScholarsByGender: React.FC = () => (
-  <div className="h-auto bg-white rounded p-9 shadow-lg">
-    <h1 className="text-lg text-center font-bold pb-3">Becarios por género.</h1>
-    <DonutGraph />
-  </div>
-);
+const ScholarsByGender: React.FC = () => {
+  const { data: session } = useSession({ required: true });
+
+  const { isLoading, data } = trpc.useQuery(["dashboard.scholarsByGender"]);
+
+  if (session?.user?.role !== UserRole.ADMIN) return null;
+
+  if (isLoading) return <Loading />;
+
+  return (
+    <div className="h-auto bg-white rounded p-9 shadow-lg">
+      <h1 className="text-lg text-center font-bold pb-3">
+        Becarios por género.
+      </h1>
+      <DonutGraph data={data} />
+    </div>
+  );
+};
 
 const ApplicationsReceived: React.FC = () => (
   <div className="h-auto bg-white rounded p-9 shadow-lg">

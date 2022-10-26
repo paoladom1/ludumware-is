@@ -57,16 +57,16 @@ model VerificationToken {
 }
 
 model Application {
-  id                      String       @id @default(cuid())
+  id                      String            @id @default(cuid())
   firstName               String
   lastName                String
-  email                   String       @unique
+  email                   String            @unique
   photoUrl                String?
-  createdAt               DateTime     @default(now())
-  updatedAt               DateTime     @updatedAt
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
   address                 String
   facebookUrl             String?
-  levelOfStudy            LevelOfStudy @default(OTHER)
+  levelOfStudy            LevelOfStudy      @default(OTHER)
   tuition                 Float
   enrollment              Float?
   semester                Int?
@@ -83,13 +83,15 @@ model Application {
   workPhoneNumber         String?
   municipalityId          String
   userId                  String
-  dui                     String?      @unique
+  dui                     String?           @unique
   academicReferenceName   String?
   academicReferenceNumber String?
   dateOfBirth             DateTime?
-  gender                  Gender?
-  municipality            Municipality @relation(fields: [municipalityId], references: [id])
-  user                    User         @relation(fields: [userId], references: [id])
+  gender                  Gender?           @default(OTHER)
+  status                  ApplicationStatus @default(PENDING)
+  municipality            Municipality      @relation(fields: [municipalityId], references: [id])
+  user                    User              @relation(fields: [userId], references: [id])
+  record                  Record?
 }
 
 model Document {
@@ -101,9 +103,11 @@ model Document {
 }
 
 model Record {
-  id           String  @id @default(cuid())
-  renewal      Boolean @default(false)
-  newAdmission Boolean @default(true)
+  id            String      @id @default(cuid())
+  renewal       Boolean     @default(false)
+  newAdmission  Boolean     @default(true)
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model Municipality {
@@ -118,6 +122,12 @@ model Department {
   id             String         @id @default(cuid())
   name           String         @unique
   municipalities Municipality[]
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  DENIED
 }
 
 enum Gender {

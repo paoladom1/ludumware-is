@@ -1,4 +1,4 @@
-import { UserRole } from "@prisma/client";
+import { Application, ApplicationStatus, UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import Link from "next/link";
@@ -7,34 +7,34 @@ import { trpc } from "@/utils/trpc";
 import { Loading } from "@/components/loading";
 import { authOptions } from "../api/auth/[...nextauth]";
 import Head from "next/head";
+import { STATUS_MAPPER } from "@/utils/applications";
 
 interface ApplicationRowProps {
-  id: string;
-  firstName: string;
-  lastName: string;
-  levelOfStudy: string;
-  createdAt: Date;
+  application: Partial<Application>;
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({
-  id,
-  firstName,
-  lastName,
-  levelOfStudy,
-  createdAt,
-}) => {
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ application }) => {
+  const { id, status, firstName, lastName, email, levelOfStudy, createdAt } =
+    application;
+
+  const statusData: { label: string; color: string } =
+    STATUS_MAPPER[status as keyof typeof ApplicationStatus];
+
   return (
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+      <td className="py-4 px-6">
+        <span className={`${statusData.color}`}>{statusData.label}</span>
+      </td>
       <th
         scope="row"
         className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
-        {id}
+        {email}
       </th>
       <td className="py-4 px-6">{firstName}</td>
       <td className="py-4 px-6">{lastName}</td>
       <td className="py-4 px-6">{levelOfStudy}</td>
-      <td className="py-4 px-6">{createdAt.toLocaleDateString("es-ES")}</td>
+      <td className="py-4 px-6">{createdAt?.toLocaleDateString("es-ES")}</td>
       <td className="py-4 px-6 text-right">
         <Link href={`/applications/${id}`}>
           <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
@@ -73,7 +73,10 @@ const Appications: NextPage = () => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-3 px-6">
-                    ID de solicitud
+                    Estado
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Correo Electronico
                   </th>
                   <th scope="col" className="py-3 px-6">
                     <div className="flex items-center">
@@ -145,18 +148,12 @@ const Appications: NextPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {applications?.map(
-                  ({ id, firstName, lastName, levelOfStudy, createdAt }) => (
-                    <ApplicationRow
-                      key={id}
-                      id={id}
-                      firstName={firstName}
-                      lastName={lastName}
-                      levelOfStudy={levelOfStudy}
-                      createdAt={createdAt}
-                    />
-                  )
-                )}
+                {applications?.map((application) => (
+                  <ApplicationRow
+                    key={application.id}
+                    application={application}
+                  />
+                ))}
               </tbody>
             </table>
           )}

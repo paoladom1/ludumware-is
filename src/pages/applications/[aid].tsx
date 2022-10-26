@@ -2,17 +2,19 @@ import { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { unstable_getServerSession } from "next-auth/next";
-import { UserRole } from "@prisma/client";
+import { ApplicationStatus, UserRole } from "@prisma/client";
 import { subYears, isAfter, isDate } from "date-fns";
 
 import { trpc } from "@/utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-import { Loading } from "@/components/loading";
+import { Loading, LoadingOverlay } from "@/components/loading";
 import { TextInput } from "@/components/textInput";
+import { STATUS_MAPPER } from "@/utils/applications";
 
 const ApplicationDetails: NextPage = () => {
   const {
+    push: navigate,
     query: { aid },
   } = useRouter();
 
@@ -20,6 +22,26 @@ const ApplicationDetails: NextPage = () => {
     "admissionForm.findById",
     { id: aid as string },
   ]);
+
+  const {
+    mutate: acceptApplication,
+    isSuccess: applicationAccepted,
+    isLoading: isAccepting,
+  } = trpc.useMutation(["admin.acceptApplication"], {
+    onSuccess: () => {
+      navigate("/applications");
+    },
+  });
+
+  const {
+    mutate: declineApplication,
+    isSuccess: applicationDeclined,
+    isLoading: isDeclining,
+  } = trpc.useMutation(["admin.declineApplication"], {
+    onSuccess: () => {
+      navigate("/applications");
+    },
+  });
 
   if (isError) return <h1>Un error ha ocurrido</h1>;
   if (isLoading) return <Loading />;
@@ -36,10 +58,34 @@ const ApplicationDetails: NextPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
+      {isAccepting && (
+        <LoadingOverlay
+          isSuccess={applicationAccepted}
+          isLoading={isAccepting}
+        />
+      )}
+      {isDeclining && (
+        <LoadingOverlay
+          isSuccess={applicationDeclined}
+          isLoading={isDeclining}
+        />
+      )}
       <div>
         <div className="m-5 sm:mt-0">
           <h2 className="flex justify-center uppercase text-xl font-bold my-8">
-            Datos de la solicitud
+            Datos de la solicitud (
+            <span
+              className={
+                STATUS_MAPPER[data?.status as keyof typeof ApplicationStatus]
+                  .color
+              }
+            >
+              {
+                STATUS_MAPPER[data?.status as keyof typeof ApplicationStatus]
+                  .label
+              }
+            </span>
+            )
           </h2>
           <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
@@ -281,20 +327,29 @@ const ApplicationDetails: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-end mt-8">
-          <button
-            type="submit"
-            className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 m-8"
-          >
-            Aceptar Solicitud
-          </button>
-          <button
-            type="submit"
-            className="w-96 rounded bg-red-400 text-white text-l py-2 px-5 m-8"
-          >
-            Denegar Solicitud
-          </button>
-        </div>
+        {(data?.status === ApplicationStatus.PENDING ||
+          data?.status === ApplicationStatus.DENIED) && (
+          <div className="flex justify-end mt-8">
+            <button
+              onClick={() => {
+                acceptApplication({ id: aid as string });
+              }}
+              className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 mr-4"
+            >
+              Aceptar Solicitud
+            </button>
+            {data?.status !== ApplicationStatus.DENIED && (
+              <button
+                onClick={() => {
+                  declineApplication({ id: aid as string });
+                }}
+                className="w-96 rounded bg-red-400 text-white text-l py-2 px-5 mr-4"
+              >
+                Denegar Solicitud
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

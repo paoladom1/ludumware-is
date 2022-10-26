@@ -25,7 +25,8 @@ const data = {
   ],
 };
 
-export const DonutGraph: React.FC = () => {
+type Props = { data: any };
+
+export const DonutGraph: React.FC<Props> = () => {
   return <Doughnut data={data} width={200} />;
 };
-
