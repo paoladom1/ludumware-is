@@ -72,24 +72,33 @@ const ScholarsByGender: React.FC = () => {
   );
 };
 
-const ApplicationsReceived: React.FC = () => (
-  <div className="h-auto bg-white rounded p-9 shadow-lg">
-    <h1 className="text-lg text-center font-bold pb-3">
-      Solicitudes recibidas.
-    </h1>
-    <h2 className="p-8">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta rerum animi
-      natus. Saepe exercitationem nisi nulla! Dolor voluptatum, tenetur quasi
-      magnam cupiditate, repellat quo sed fuga, sunt laborum explicabo mollitia?
-    </h2>
-  </div>
-);
+const ApplicationsReceived: React.FC = () => {
+  const { data: session } = useSession({ required: true });
+  if (session?.user?.role !== UserRole.ADMIN) return null;
+  return (
+    <div className="h-auto bg-white rounded p-9 shadow-lg">
+      <h1 className="text-lg text-center font-bold pb-3">
+        Solicitudes recibidas.
+      </h1>
+      <h2 className="p-8">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta rerum
+        animi natus. Saepe exercitationem nisi nulla! Dolor voluptatum, tenetur
+        quasi magnam cupiditate, repellat quo sed fuga, sunt laborum explicabo
+        mollitia?
+      </h2>
+    </div>
+  );
+};
 
-const ScholarsByInstitution: React.FC = () => (
-  <div className="col-span-2 row-span-2 h-full bg-white rounded p-9 shadow-lg">
-    <h1 className="text-lg text-center font-bold">
-      Becarios por institución de estudio.
-    </h1>
-    <GraficaBarraH />
-  </div>
-);
+const ScholarsByInstitution: React.FC = () => {
+  const { data: session } = useSession({ required: true });
+  if (session?.user?.role !== UserRole.ADMIN) return null;
+  return (
+    <div className="col-span-2 row-span-2 h-full bg-white rounded p-9 shadow-lg">
+      <h1 className="text-lg text-center font-bold">
+        Becarios por institución de estudio.
+      </h1>
+      <GraficaBarraH />
+    </div>
+  );
+};

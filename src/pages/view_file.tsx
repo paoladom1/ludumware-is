@@ -1,5 +1,5 @@
 import React from "react";
-import ComponentFile from "./components/view_file/component_file";
+import ComponentFile from "@/components/view_file/component_file";
 import { Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";

@@ -1,7 +1,7 @@
 import React from "react";
 import { AdmissionForm } from "@/components/admissionForm";
 
-export const CreateFile: React.FC = () => {
+const CreateFile: React.FC = () => {
   return (
     <div>
       <div className="px-5 py-4 pb-12 justify-between flex flex-wrap justify-between items-center">
@@ -21,3 +21,5 @@ export const CreateFile: React.FC = () => {
     </div>
   );
 };
+
+export default CreateFile;
