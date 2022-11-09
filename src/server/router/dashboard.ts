@@ -1,8 +1,8 @@
+import { ApplicationStatus } from "@prisma/client";
 import { createAdminProtectedRouter } from "./context";
 
-export const dashboardRouter = createAdminProtectedRouter().query(
-  "scholarsByGender",
-  {
+export const dashboardRouter = createAdminProtectedRouter()
+  .query("scholarsByGender", {
     async resolve({ ctx }) {
       return await ctx.prisma.user.groupBy({
         by: ["gender"],
@@ -16,5 +16,13 @@ export const dashboardRouter = createAdminProtectedRouter().query(
         },
       });
     },
-  }
-);
+  })
+  .query("amountOfApplications", {
+    async resolve({ ctx }) {
+      const totalApplications = await ctx.prisma.application.count();
+      const acceptedApplications = await ctx.prisma.application.count({
+        where: { status: ApplicationStatus.ACCEPTED },
+      });
+      return { totalApplications, acceptedApplications };
+    },
+  });
