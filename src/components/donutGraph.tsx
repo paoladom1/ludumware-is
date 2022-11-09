@@ -1,32 +1,56 @@
 import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+type SeggregatedGenderCount = { gender: string; _count: { gender: number } };
 
-const data = {
-  labels: ["Femenino", "Masculino", "Otro"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [12, 19, 1],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
+type Props = { data: SeggregatedGenderCount[] | undefined };
+
+const GENDER_COLOR = {
+  FEMALE: {
+    fill: "#ff638466",
+    stroke: "#ff6384cc",
+  },
+  MALE: { fill: "#36a2eb66", stroke: "#36a2ebcc" },
+  OTHER: { fill: "#ffce5666", stroke: "#ffce56cc" },
 };
 
-type Props = { data: any };
+const GENDER_LABEL = {
+  FEMALE: "Femenino",
+  MALE: "Masculino",
+  OTHER: "Otro",
+};
 
-export const DonutGraph: React.FC<Props> = () => {
-  return <Doughnut data={data} width={200} />;
+type GenderLabel = keyof typeof GENDER_LABEL;
+type GenderColors = keyof typeof GENDER_COLOR;
+
+export const DonutGraph: React.FC<Props> = ({ data }) => {
+  const formattedData = data?.map(
+    ({ gender, _count: { gender: genderCount } }) => ({
+      name: gender,
+      count: genderCount,
+    })
+  );
+
+  return (
+    <ResponsiveContainer maxHeight={300}>
+      <PieChart>
+        <Pie nameKey="name" dataKey="count" data={formattedData}>
+          {formattedData?.map(({ name }) => (
+            <Cell
+              key={name}
+              stroke={GENDER_COLOR[name as GenderColors].stroke}
+              fill={GENDER_COLOR[name as GenderColors].fill}
+            />
+          ))}
+        </Pie>
+        <Legend
+          formatter={(value) => (
+            <span className="text-black capitalize">
+              {GENDER_LABEL[value as GenderLabel]}
+            </span>
+          )}
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  );
 };

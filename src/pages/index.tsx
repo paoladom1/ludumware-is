@@ -58,6 +58,8 @@ const ScholarsByGender: React.FC = () => {
 
   const { isLoading, data } = trpc.useQuery(["dashboard.scholarsByGender"]);
 
+  console.log(trpc.useQuery(["dashboard.scholarsByGender"]))
+
   if (session?.user?.role !== UserRole.ADMIN) return null;
 
   if (isLoading) return <Loading />;
