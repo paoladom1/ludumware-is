@@ -75,7 +75,7 @@ const ScholarsByGender: React.FC = () => {
 const ApplicationsReceived: React.FC = () => {
   const { data: session } = useSession({ required: true });
 
-  const { isLoading, data } = trpc.useQuery(["dashboard.amountOfApplications"]);
+  const { isLoading, data } = trpc.useQuery(["dashboard.applicationsCount"]);
 
   if (session?.user?.role !== UserRole.ADMIN) return null;
 

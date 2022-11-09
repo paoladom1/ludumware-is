@@ -17,7 +17,7 @@ export const dashboardRouter = createAdminProtectedRouter()
       });
     },
   })
-  .query("amountOfApplications", {
+  .query("applicationsCount", {
     async resolve({ ctx }) {
       const totalApplications = await ctx.prisma.application.count();
       const acceptedApplications = await ctx.prisma.application.count({
