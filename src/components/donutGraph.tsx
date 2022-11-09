@@ -1,5 +1,17 @@
 import React from "react";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
+} from "recharts";
+import {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 
 type SeggregatedGenderCount = { gender: string; _count: { gender: number } };
 
@@ -23,13 +35,30 @@ const GENDER_LABEL = {
 type GenderLabel = keyof typeof GENDER_LABEL;
 type GenderColors = keyof typeof GENDER_COLOR;
 
+const CustomTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
+  active,
+  payload,
+}) => {
+  if (!active || !payload) return null;
+
+  return (
+    <div className="bg-white p-4">
+      <span className="text-sm">
+        {GENDER_LABEL[payload?.[0]?.name as GenderLabel]}: {payload?.[0]?.value}
+      </span>
+    </div>
+  );
+};
+
 export const DonutGraph: React.FC<Props> = ({ data }) => {
-  const formattedData = data?.map(
-    ({ gender, _count: { gender: genderCount } }) => ({
+  const formattedData = data
+    ?.map(({ gender, _count: { gender: genderCount } }) => ({
       name: gender,
       count: genderCount,
-    })
-  );
+    }))
+    .filter(Boolean);
+
+  console.log(formattedData);
 
   return (
     <ResponsiveContainer maxHeight={300}>
@@ -50,6 +79,7 @@ export const DonutGraph: React.FC<Props> = ({ data }) => {
             </span>
           )}
         />
+        <Tooltip content={<CustomTooltip />} />
       </PieChart>
     </ResponsiveContainer>
   );
