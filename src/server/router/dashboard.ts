@@ -25,4 +25,19 @@ export const dashboardRouter = createAdminProtectedRouter()
       });
       return { totalApplications, acceptedApplications };
     },
+  })
+  .query("scholarsByLevelOfStudy", {
+    async resolve({ ctx }) {
+      return await ctx.prisma.application.groupBy({
+        by: ["levelOfStudy"],
+        where: {
+          status: {
+            equals: "ACCEPTED",
+          },
+        },
+        _count: {
+          levelOfStudy: true,
+        },
+      });
+    },
   });
