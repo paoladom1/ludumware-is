@@ -11,6 +11,9 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { Loading, LoadingOverlay } from "@/components/loading";
 import { TextInput } from "@/components/textInput";
 import { STATUS_MAPPER } from "@/utils/applications";
+import { Modal } from "@/components/modal";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const ApplicationDetails: NextPage = () => {
   const {
@@ -33,15 +36,8 @@ const ApplicationDetails: NextPage = () => {
     },
   });
 
-  const {
-    mutate: declineApplication,
-    isSuccess: applicationDeclined,
-    isLoading: isDeclining,
-  } = trpc.useMutation(["admin.declineApplication"], {
-    onSuccess: () => {
-      navigate("/applications");
-    },
-  });
+  const [declieApplicationOpen, setDeclineApplicationOpen] = useState(false);
+  const [pendingApplicationOpen, setPendingApplicationOpen] = useState(false);
 
   if (isError) return <h1>Un error ha ocurrido</h1>;
   if (isLoading) return <Loading />;
@@ -50,6 +46,11 @@ const ApplicationDetails: NextPage = () => {
   const majority = isDate(data?.dateOfBirth)
     ? isAfter(majorityDate, data?.dateOfBirth as Date)
     : false;
+
+  const showDeclineApplicationModal = () => setDeclineApplicationOpen(true);
+  const hideDeclineApplicationModal = () => setDeclineApplicationOpen(false);
+  const showPendingApplicationModal = () => setPendingApplicationOpen(true);
+  const hidePendingApplicationModal = () => setPendingApplicationOpen(false);
 
   return (
     <>
@@ -64,13 +65,8 @@ const ApplicationDetails: NextPage = () => {
           isLoading={isAccepting}
         />
       )}
-      {isDeclining && (
-        <LoadingOverlay
-          isSuccess={applicationDeclined}
-          isLoading={isDeclining}
-        />
-      )}
-      <div>
+
+      <div className="pb-8">
         <div className="m-5 sm:mt-0">
           <h2 className="flex justify-center uppercase text-xl font-bold my-8">
             Datos de la solicitud (
@@ -327,30 +323,225 @@ const ApplicationDetails: NextPage = () => {
             </div>
           </div>
         </div>
+        {data?.declineReason && (
+          <div className="m-5 sm:mt-0">
+            <div className="md:grid md:grid-cols-3 md:gap-6">
+              <div className="md:col-span-1">
+                <div className="px-4 sm:px-0">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900 flex justify-end mr-6">
+                    Notas
+                  </h3>
+                </div>
+              </div>
+              <div className="mt-5 md:col-span-2 md:mt-0 flex flex-col">
+                <div className="overflow-hidden shadow sm:">
+                  <div className="bg-white px-4 py-5 sm:p-9">
+                    <div className="grid grid-cols-6 gap-6">
+                      <div className="col-span-6">
+                        <TextInput
+                          disabled
+                          value={data?.declineReason || undefined}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {data?.pendingReason && (
+          <div className="m-5 sm:mt-0">
+            <div className="md:grid md:grid-cols-3 md:gap-6">
+              <div className="md:col-span-1">
+                <div className="px-4 sm:px-0">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900 flex justify-end mr-6">
+                    Notas
+                  </h3>
+                </div>
+              </div>
+              <div className="mt-5 md:col-span-2 md:mt-0 flex flex-col">
+                <div className="overflow-hidden shadow sm:">
+                  <div className="bg-white px-4 py-5 sm:p-9">
+                    <div className="grid grid-cols-6 gap-6">
+                      <div className="col-span-6">
+                        <TextInput
+                          disabled
+                          value={data?.pendingReason || undefined}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {(data?.status === ApplicationStatus.PENDING ||
           data?.status === ApplicationStatus.DENIED) && (
-          <div className="flex justify-end mt-8">
-            <button
-              onClick={() => {
-                acceptApplication({ id: aid as string });
-              }}
-              className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 mr-4"
-            >
-              Aceptar Solicitud
-            </button>
-            {data?.status !== ApplicationStatus.DENIED && (
+          <div className="flex flex-col mt-8">
+            <div className="flex justify-end">
               <button
                 onClick={() => {
-                  declineApplication({ id: aid as string });
+                  acceptApplication({ id: aid as string });
                 }}
-                className="w-96 rounded bg-red-400 text-white text-l py-2 px-5 mr-4"
+                className="w-96 rounded bg-blue-400 text-white text-l py-2 px-5 mr-4"
               >
-                Denegar Solicitud
+                Aceptar Solicitud
               </button>
-            )}
+              {data?.status !== ApplicationStatus.DENIED && (
+                <button
+                  onClick={showDeclineApplicationModal}
+                  className="w-96 rounded bg-red-400 text-white text-l py-2 px-5 mr-4"
+                >
+                  Denegar Solicitud
+                </button>
+              )}
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={showPendingApplicationModal}
+                className="w-96 rounded bg-gray-400 text-white text-l py-2 px-5 mr-4"
+              >
+                Solicitar Cambios
+              </button>
+            </div>
           </div>
         )}
       </div>
+      {declieApplicationOpen && (
+        <DeclineApplicationModal hideModal={hideDeclineApplicationModal} />
+      )}
+      {pendingApplicationOpen && (
+        <PendingApplicationModal hideModal={hidePendingApplicationModal} />
+      )}
+    </>
+  );
+};
+
+type DeclineApplicationModalProps = { hideModal: () => void };
+type DeclineApplicationFieldValues = { declineReason: string };
+const DeclineApplicationModal: React.FC<DeclineApplicationModalProps> = ({
+  hideModal,
+}) => {
+  const {
+    push: navigate,
+    query: { aid },
+  } = useRouter();
+
+  const { register, handleSubmit } = useForm<DeclineApplicationFieldValues>();
+
+  const {
+    mutate: declineApplication,
+    isSuccess: applicationDeclined,
+    isLoading: isDeclining,
+  } = trpc.useMutation(["admin.declineApplication"], {
+    onSuccess: () => {
+      navigate("/applications");
+    },
+  });
+
+  const onSubmit: SubmitHandler<DeclineApplicationFieldValues> = (data) => {
+    declineApplication({
+      id: aid as string,
+      declineReason: data?.declineReason,
+    });
+    hideModal();
+  };
+
+  return (
+    <>
+      <Modal>
+        <div className="w-full flex flex-col">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h4 className="uppercase text-m font-bold">Agregar motivo</h4>
+            <textarea
+              rows={6}
+              className="border my-6 w-full"
+              {...register("declineReason")}
+            ></textarea>
+            <div className="flex flex-row justify-end">
+              <button
+                type="submit"
+                className="rounded bg-blue-400 text-white text-l py-2 px-5 mr-4"
+              >
+                Guardar
+              </button>
+              <button type="button" onClick={hideModal}>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+      {isDeclining && (
+        <LoadingOverlay
+          isSuccess={applicationDeclined}
+          isLoading={isDeclining}
+        />
+      )}
+    </>
+  );
+};
+
+type PendingApplicationModalProps = { hideModal: () => void };
+type PendingApplicationFieldValues = { pendingReason: string };
+const PendingApplicationModal: React.FC<PendingApplicationModalProps> = ({
+  hideModal,
+}) => {
+  const {
+    push: navigate,
+    query: { aid },
+  } = useRouter();
+
+  const { register, handleSubmit } = useForm<PendingApplicationFieldValues>();
+
+  const {
+    mutate: pendingApplication,
+    isSuccess: applicationPending,
+    isLoading: isPending,
+  } = trpc.useMutation(["admin.pendingApplication"], {
+    onSuccess: () => {
+      navigate("/applications");
+    },
+  });
+
+  const onSubmit: SubmitHandler<PendingApplicationFieldValues> = (data) => {
+    pendingApplication({
+      id: aid as string,
+      pendingReason: data?.pendingReason,
+    });
+    hideModal();
+  };
+
+  return (
+    <>
+      <Modal>
+        <div className="w-full flex flex-col">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h4 className="uppercase text-m font-bold">Agregar motivo</h4>
+            <textarea
+              rows={6}
+              className="border my-6 w-full"
+              {...register("pendingReason")}
+            ></textarea>
+            <div className="flex flex-row justify-end">
+              <button
+                type="submit"
+                className="rounded bg-blue-400 text-white text-l py-2 px-5 mr-4"
+              >
+                Guardar
+              </button>
+              <button type="button" onClick={hideModal}>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+      {isPending && (
+        <LoadingOverlay isSuccess={applicationPending} isLoading={isPending} />
+      )}
     </>
   );
 };

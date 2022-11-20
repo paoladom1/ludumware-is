@@ -87,6 +87,8 @@ model Application {
   academicReferenceName   String?
   academicReferenceNumber String?
   dateOfBirth             DateTime?
+  declineReason           String?
+  pendingReason           String?
   gender                  Gender?           @default(OTHER)
   status                  ApplicationStatus @default(PENDING)
   municipality            Municipality      @relation(fields: [municipalityId], references: [id])
