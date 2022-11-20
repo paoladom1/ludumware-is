@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
 import { UserRole } from "@prisma/client";
 import { Loading } from "@/components/loading";
+import Bar from "@/components/stepBar";
 
 const Home: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -29,6 +30,10 @@ const Home: NextPage = () => {
           <ScholarsByGender />
           <ApplicationsReceived />
         </div>
+        <>
+          <br />
+          <Bar />
+        </>
       </>
     </>
   );
