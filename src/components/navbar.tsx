@@ -11,7 +11,10 @@ const commonRoutes: Route[] = [
   { path: "/applicationSubmission", label: "Nueva Solicitud" },
 ];
 
-const adminRoutes: Route[] = [{ path: "/applications", label: "Solicitudes" }];
+const adminRoutes: Route[] = [
+  { path: "/applications", label: "Solicitudes" },
+  { path: "/files", label: "Expedientes" },
+];
 
 const Navbar = () => {
   const { data: session } = useSession({ required: true });
