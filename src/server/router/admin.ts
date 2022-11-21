@@ -36,11 +36,30 @@ export const adminRouter = createAdminProtectedRouter()
   .mutation("declineApplication", {
     input: z.object({
       id: z.string(),
+      declineReason: z.string(),
     }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.application.update({
         where: { id: input.id },
-        data: { status: ApplicationStatus.DENIED },
+        data: {
+          status: ApplicationStatus.DENIED,
+          declineReason: input.declineReason,
+        },
+      });
+    },
+  })
+  .mutation("pendingApplication", {
+    input: z.object({
+      id: z.string(),
+      pendingReason: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.application.update({
+        where: { id: input.id },
+        data: {
+          status: ApplicationStatus.PENDING,
+          pendingReason: input.pendingReason,
+        },
       });
     },
   });
