@@ -63,13 +63,13 @@ const Appications: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Aplicaciones</title>
+        <title>Expedientes</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
       <div className="flex flex-col">
         <h2 className="self-center text-xl uppercase font-bold my-8">
-          Solicitudes de aspirantes
+          Expedientes de Becarios
         </h2>
         <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
           {isLoading && <Loading />}
@@ -131,17 +131,19 @@ const Appications: NextPage = () => {
                   <th scope="col" className="py-3 px-6">
                     <span className="flex justify-center">Expediente</span>
                   </th>
-                  <th scope="col" className="py-3 px-6">
-                  </th>
+                  <th scope="col" className="py-3 px-6"></th>
                 </tr>
               </thead>
               <tbody>
-                {applications?.map((application) => (
-                  <ApplicationRow
-                    key={application.id}
-                    application={application}
-                  />
-                ))}
+                {applications?.map(
+                  (application) =>
+                    application.status === "ACCEPTED" && (
+                      <ApplicationRow
+                        key={application.id}
+                        application={application}
+                      />
+                    )
+                )}
               </tbody>
             </table>
           )}
