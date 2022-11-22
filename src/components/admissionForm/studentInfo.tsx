@@ -1,10 +1,11 @@
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
 import { subYears, isAfter, isDate } from "date-fns";
 
 import { trpc } from "@/utils/trpc";
 import { Gender } from "@prisma/client";
+import { Loading } from "@/components/loading";
 
 type GenderLabels = { MALE: string; FEMALE: string; OTHER: string };
 
@@ -14,21 +15,41 @@ const GENDER_LABEL: GenderLabels = {
   OTHER: "Otro",
 };
 
-function StudentInfo() {
+type GenderKey = keyof typeof Gender;
+
+interface StudentInfoProps {
+  defaultValues?: { department: string; municipality: string };
+}
+
+const StudentInfo: React.FC<StudentInfoProps> = ({ defaultValues }) => {
   const { data: session } = useSession();
   const {
     watch,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
-  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const departmentId = watch("department");
 
-  const { data: departmentsData } = trpc.useQuery(["departments.getAll"]);
-  const { data: municipalitiesData } = trpc.useQuery([
-    "municipalities.findByDepartment",
-    { id: selectedDepartment },
-  ]);
+  const { data: departmentsData, isLoading: isLoadingDepartments } =
+    trpc.useQuery(["departments.getAll"], {
+      onSuccess: () => {
+        if (defaultValues?.department) {
+          setValue("department", defaultValues?.department);
+        }
+      },
+    });
+
+  const { data: municipalitiesData, isLoading: isLoadingMunicipalities } =
+    trpc.useQuery(["municipalities.findByDepartment", { id: departmentId }], {
+      enabled: !!departmentId,
+      onSuccess: () => {
+        if (defaultValues?.municipality) {
+          setValue("municipality", defaultValues?.municipality);
+        }
+      },
+    });
 
   const hasJob = watch("hasJob") === "yes";
   const dateOfBirth = watch("dateOfBirth");
@@ -36,6 +57,8 @@ function StudentInfo() {
   const majority = isDate(dateOfBirth)
     ? isAfter(majorityDate, dateOfBirth)
     : false;
+
+  if (isLoadingDepartments || isLoadingMunicipalities) return <Loading />;
 
   return (
     <div className="m-5 sm:mt-0">
@@ -91,7 +114,7 @@ function StudentInfo() {
                   </legend>
                   <div className="flex flex-row mt-2">
                     {Object.keys(Gender).map((gender) => {
-                      const label = GENDER_LABEL[gender as keyof typeof Gender];
+                      const label = GENDER_LABEL[gender as GenderKey];
 
                       return (
                         <div key={gender} className="flex items-center mr-8">
@@ -178,12 +201,7 @@ function StudentInfo() {
                     <select
                       defaultValue=""
                       className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      {...register("department", {
-                        onChange: (e: React.FormEvent<HTMLSelectElement>) => {
-                          e.preventDefault();
-                          setSelectedDepartment(e.currentTarget.value);
-                        },
-                      })}
+                      {...register("department")}
                     >
                       <option disabled hidden value="">
                         ----
@@ -207,8 +225,8 @@ function StudentInfo() {
                   <label className=" text-sm font-medium text-gray-700">
                     Munincipio
                     <select
-                      disabled={municipalitiesData?.length === 0}
                       defaultValue=""
+                      disabled={municipalitiesData?.length === 0}
                       autoComplete="municipio-name"
                       className="w-full border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       {...register("municipality")}
@@ -418,6 +436,6 @@ function StudentInfo() {
       </div>
     </div>
   );
-}
+};
 
 export default StudentInfo;

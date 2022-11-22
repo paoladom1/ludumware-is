@@ -1,7 +1,7 @@
 import { createProtectedRouter } from "./context";
-import { Prisma } from "@prisma/client";
+import { Application, Prisma } from "@prisma/client";
 
-import { formSchema } from "@/components/admissionForm";
+import { FormSchema } from "@/components/admissionForm";
 import { z } from "zod";
 
 export const admissionFormRouter = createProtectedRouter()
@@ -31,8 +31,27 @@ export const admissionFormRouter = createProtectedRouter()
       });
     },
   })
-  .mutation("submit", {
-    input: formSchema,
+  .query("findByUser", {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.application.findFirstOrThrow({
+        include: {
+          municipality: {
+            select: {
+              id: true,
+              name: true,
+              department: { select: { id: true, name: true } },
+            },
+          },
+        },
+        where: { userId: input.id },
+      });
+    },
+  })
+  .mutation("createApplication", {
+    input: FormSchema,
     async resolve({ ctx, input }) {
       const application: Prisma.ApplicationCreateInput = {
         firstName: input.firstName,
@@ -57,13 +76,63 @@ export const admissionFormRouter = createProtectedRouter()
         academicReferenceName: input.academicReferenceName,
         academicReferenceNumber: input.academicReferenceNumber,
         municipality: { connect: { id: input.municipality } },
-        user: { connect: { id: input.user } },
+        user: { connect: { id: ctx.session.user.id } },
       };
 
-      const createApplication = await ctx.prisma.application.create({
+      const newApplication: Application = await ctx.prisma.application.create({
         data: application,
       });
 
-      return createApplication;
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: { gender: input.gender },
+      });
+
+      return newApplication;
+    },
+  })
+  .mutation("updateApplication", {
+    input: z.object({
+      id: z.string(),
+      data: FormSchema,
+    }),
+    async resolve({ ctx, input }) {
+      const applicationData: Prisma.ApplicationUpdateInput = {
+        firstName: input.data.firstName,
+        lastName: input.data.lastName,
+        gender: input.data.gender,
+        dateOfBirth: input.data.dateOfBirth,
+        email: input.data.email,
+        dui: input.data.dui,
+        address: input.data.address,
+        tuition: input.data.tuition,
+        yearOfStudy: input.data.yearOfStudy,
+        hasJob: input.data.hasJob === "yes",
+        salary: input.data.salary,
+        placeOfWork: input.data.placeOfWork,
+        workAddress: input.data.workAddress,
+        workPhoneNumber: input.data.workPhoneNumber,
+        levelOfStudy: input.data.levelOfStudy,
+        institutionName: input.data.institutionName,
+        institutionAddress: input.data.institutionAddress,
+        institutionPhoneNumber: input.data.institutionPhoneNumber,
+        careerName: input.data.careerName,
+        academicReferenceName: input.data.academicReferenceName,
+        academicReferenceNumber: input.data.academicReferenceNumber,
+        municipality: { connect: { id: input.data.municipality } },
+        user: { connect: { id: ctx.session.user.id } },
+      };
+
+      const application = await ctx.prisma.application.update({
+        where: { id: input.id },
+        data: applicationData,
+      });
+
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: { gender: input.data.gender },
+      });
+
+      return application;
     },
   });

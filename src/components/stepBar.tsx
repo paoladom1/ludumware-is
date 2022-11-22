@@ -1,7 +1,10 @@
 import React from "react";
+import { trpc } from "@/utils/trpc";
+import { UserRole, ApplicationStatus } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { data } from "./barGraphH";
 
 function stepBar() {
-
     return (
         <>
             <div className="flex flex-col">
@@ -42,7 +45,7 @@ function stepBar() {
                                     <tr>
 
                                         <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                            Estado 1
+                                            estado
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                                             Aprobado
@@ -118,6 +121,7 @@ function stepBar() {
                         </div>
                     </div>
                 </div>
+                
             </div>
         </>
     );
