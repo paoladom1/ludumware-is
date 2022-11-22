@@ -2,11 +2,18 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 
 import { AdmissionForm } from "@/components/admissionForm";
-import { unstable_getServerSession } from "next-auth";
+import { unstable_getServerSession, User } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { trpc } from "@/utils/trpc";
+import { Loading } from "@/components/loading";
 import { UserRole } from "@prisma/client";
 
-const ApplicationPage: NextPage = () => {
+const ApplicationPage: NextPage<{ user: User }> = ({ user }) => {
+  const { isLoading, data } = trpc.useQuery([
+    "admissionForm.findByUser",
+    { id: user.id },
+  ]);
+
   return (
     <>
       <Head>
@@ -14,7 +21,8 @@ const ApplicationPage: NextPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <AdmissionForm />
+      {isLoading && <Loading />}
+      {!isLoading && <AdmissionForm isEdit={!!data} />}
     </>
   );
 };
@@ -41,7 +49,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   }
 
   return {
-    props: {},
+    props: {
+      user: session.user,
+    },
   };
 };
 
