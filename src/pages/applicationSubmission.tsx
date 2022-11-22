@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Head from "next/head";
-
 import { AdmissionForm } from "@/components/admissionForm";
 
 const SubmissionForm: NextPage = () => {

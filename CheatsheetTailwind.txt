@@ -1,0 +1,5 @@
+https://nerdcave.com/tailwind-cheat-sheet
+@react-pdf-viewer
+chart.js
+faker
+react-chartjs-2
