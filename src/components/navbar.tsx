@@ -6,7 +6,10 @@ import { UserRole } from "@prisma/client";
 
 type Route = { path: string; label: string };
 
-const adminRoutes: Route[] = [{ path: "/applications", label: "Solicitudes" }];
+const adminRoutes: Route[] = [
+  { path: "/applications", label: "Solicitudes" },
+  { path: "/files", label: "Expedientes" },
+];
 
 const Navbar = () => {
   const { data: session } = useSession({ required: true });
