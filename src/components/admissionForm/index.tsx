@@ -114,7 +114,7 @@ export const AdmissionForm: React.FC<AdmissionFormProps> = ({ isEdit }) => {
               default:
                 methods.setValue(
                   field as keyof FormData,
-                  (value as any) || undefined
+                  (value as string | number) || undefined
                 );
             }
           });

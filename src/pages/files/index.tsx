@@ -1,4 +1,4 @@
-import { Application, ApplicationStatus, UserRole } from "@prisma/client";
+import { Application, UserRole } from "@prisma/client";
 import { NextPage, GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import Link from "next/link";
@@ -7,19 +7,13 @@ import { trpc } from "@/utils/trpc";
 import { Loading } from "@/components/loading";
 import { authOptions } from "../api/auth/[...nextauth]";
 import Head from "next/head";
-import { STATUS_MAPPER } from "@/utils/applications";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import ApplicationDetailsExp from "./[aid]";
 
 interface ApplicationRowProps {
   application: Partial<Application>;
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ application }) => {
-  const { id, status, firstName, lastName, email, levelOfStudy } = application;
-
-  const statusData: { label: string; color: string } =
-    STATUS_MAPPER[status as keyof typeof ApplicationStatus];
+  const { id, firstName, lastName, email, levelOfStudy } = application;
 
   return (
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
