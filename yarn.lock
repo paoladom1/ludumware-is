@@ -159,7 +159,7 @@
   "resolved" "https://registry.npmjs.org/@panva/hkdf/-/hkdf-1.0.2.tgz"
   "version" "1.0.2"
 
-"@prisma/client@^4.5.0":
+"@prisma/client@^4.6.1":
   "integrity" "sha512-M1+NNrMzqaOIxT7PBGcTs3IZo7d1EW/+gVQd4C4gUgWBDGgD9AcIeZnUSidgWClmpMSgVUdnVORjsWWGUameYA=="
   "resolved" "https://registry.npmjs.org/@prisma/client/-/client-4.6.1.tgz"
   "version" "4.6.1"
@@ -2441,7 +2441,7 @@
   "resolved" "https://registry.npmjs.org/pretty-format/-/pretty-format-3.8.0.tgz"
   "version" "3.8.0"
 
-"prisma@^4.5.0":
+"prisma@^4.6.1":
   "integrity" "sha512-BR4itMCuzrDV4tn3e2TF+nh1zIX/RVU0isKtKoN28ADeoJ9nYaMhiuRRkFd2TZN8+l/XfYzoRKyHzUFXLQhmBQ=="
   "resolved" "https://registry.npmjs.org/prisma/-/prisma-4.6.1.tgz"
   "version" "4.6.1"
@@ -2492,7 +2492,7 @@
     "loose-envify" "^1.1.0"
     "scheduler" "^0.23.0"
 
-"react-hook-form@^7.36.1":
+"react-hook-form@^7.39.4":
   "integrity" "sha512-B0e78r9kR9L2M4A4AXGbHoA/vyv34sB/n8QWJAw33TFz8f5t9helBbYAeqnbvcQf1EYzJxKX/bGQQh9K+evCyQ=="
   "resolved" "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.39.4.tgz"
   "version" "7.39.4"

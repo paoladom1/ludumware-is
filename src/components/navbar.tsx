@@ -6,11 +6,6 @@ import { UserRole } from "@prisma/client";
 
 type Route = { path: string; label: string };
 
-const commonRoutes: Route[] = [
-  { path: "/", label: "Inicio" },
-  { path: "/applicationSubmission", label: "Nueva Solicitud" },
-];
-
 const adminRoutes: Route[] = [
   { path: "/applications", label: "Solicitudes" },
   { path: "/files", label: "Expedientes" },
@@ -22,12 +17,10 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const routes = useMemo(
-    () =>
-      session?.user?.role === UserRole.ADMIN
-        ? [...commonRoutes, ...adminRoutes]
-        : commonRoutes,
+    () => (session?.user?.role === UserRole.ADMIN ? [...adminRoutes] : []),
     [session?.user?.role]
   );
+
   const toggleShowUserMenu = () => setShowUserMenu(!showUserMenu);
 
   return (
