@@ -22,9 +22,12 @@ const StudentInfoSchema = z.object({
   }),
   email: z.string().email("Este campo es requerido"),
   dui: z
-    .string()
-    .regex(/^\d{8}-\d{1}$/, "Formato incorrecto")
-    .optional(),
+    .union([
+      z.string().length(0),
+      z.string().regex(/^\d{8}-\d{1}$/, "Formato incorrecto"),
+    ])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e)),
   dateOfBirth: z
     .date({
       required_error: "Campo requerido ",
@@ -40,9 +43,10 @@ const StudentInfoSchema = z.object({
   salary: z.number().optional(),
   workAddress: z.string().optional(),
   workPhoneNumber: z
-    .string()
-    .regex(/^[0-9]{4}[-]?[0-9]{4}$/)
-    .optional(),
+    .union([z.string().length(0), z.string().regex(/^[0-9]{4}[-]?[0-9]{4}$/)])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e)),
+  photoUrl: z.string().optional(),
 });
 
 const AcademicInfoSchema = z.object({
@@ -86,25 +90,35 @@ export const AdmissionForm: React.FC<AdmissionFormProps> = ({ isEdit }) => {
     {
       enabled: isEdit,
       onSuccess: (data) => {
-        Object.entries(data).forEach(([field, value]) => {
-          switch (field) {
-            case "photoUrl":
-              break;
-            case "salary":
-              break;
-            case "hasJob":
-              methods.setValue(field as keyof FormData, value ? "yes" : "no");
-              break;
-            case "dateOfBirth":
-              methods.setValue(
-                field as keyof FormData,
-                new Date(value as string).toLocaleDateString("en-CA")
-              );
-              break;
-            default:
-              methods.setValue(field as keyof FormData, value || undefined);
-          }
-        });
+        if (data) {
+          Object.entries(data).forEach(([field, value]) => {
+            switch (field) {
+              case "department":
+                break;
+              case "municipality":
+                break;
+              case "photoUrl":
+                break;
+              case "salary":
+                methods.setValue("salary", (value as number) || undefined);
+                break;
+              case "hasJob":
+                methods.setValue(field as keyof FormData, value ? "yes" : "no");
+                break;
+              case "dateOfBirth":
+                methods.setValue(
+                  field as keyof FormData,
+                  new Date(value as string).toLocaleDateString("en-CA")
+                );
+                break;
+              default:
+                methods.setValue(
+                  field as keyof FormData,
+                  (value as any) || undefined
+                );
+            }
+          });
+        }
       },
     }
   );

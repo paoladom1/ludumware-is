@@ -36,7 +36,7 @@ export const admissionFormRouter = createProtectedRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.application.findFirstOrThrow({
+      const application = await ctx.prisma.application.findFirst({
         include: {
           municipality: {
             select: {
@@ -48,6 +48,8 @@ export const admissionFormRouter = createProtectedRouter()
         },
         where: { userId: input.id },
       });
+
+      return application || undefined;
     },
   })
   .mutation("createApplication", {

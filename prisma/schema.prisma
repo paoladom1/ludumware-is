@@ -89,6 +89,8 @@ model Application {
   dateOfBirth             DateTime?
   gender                  Gender?           @default(OTHER)
   status                  ApplicationStatus @default(PENDING)
+  declineReason           String?
+  pendingReason           String?
   municipality            Municipality      @relation(fields: [municipalityId], references: [id])
   user                    User              @relation(fields: [userId], references: [id])
   record                  Record?

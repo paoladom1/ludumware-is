@@ -14,7 +14,7 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const routes = useMemo(
-    () => (session?.user?.role === UserRole.ADMIN ? adminRoutes : []),
+    () => (session?.user?.role === UserRole.ADMIN ? [...adminRoutes] : []),
     [session?.user?.role]
   );
 
