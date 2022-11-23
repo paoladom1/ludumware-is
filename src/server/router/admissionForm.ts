@@ -85,9 +85,6 @@ export const admissionFormRouter = createProtectedRouter()
         data: application,
       });
 
-      await ctx.prisma.user.update({ where: { id: input.user }, data: { gender: input.gender } });
-
-      return createApplication;
       await ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: { gender: input.gender },
